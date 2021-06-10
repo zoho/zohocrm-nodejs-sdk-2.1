@@ -1,4 +1,4 @@
-const SDKConfig = require('./sdk_config').SDKConfig; 
+const SDKConfig = require('./sdk_config').SDKConfig;
 
 class SDKConfigBuilder {
     _autoRefreshFields = false;
@@ -50,6 +50,6 @@ class SDKConfigBuilder {
 }
 
 module.exports = {
-    MasterModel : SDKConfigBuilder,
-    SDKConfigBuilder : SDKConfigBuilder
+    MasterModel: SDKConfigBuilder,
+    SDKConfigBuilder: SDKConfigBuilder
 }

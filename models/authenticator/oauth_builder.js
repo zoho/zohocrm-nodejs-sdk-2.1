@@ -107,9 +107,9 @@ class OAuthBuilder {
 
             error[Constants.ERROR_HASH_FIELD] = Constants.GRANT_TOKEN;
 
-            error[Constants.EXPECTED_TYPE] = Constants.STRING_NAMESPACE;
+            error[Constants.ERROR_HASH_EXPECTED_TYPE] = Constants.STRING_NAMESPACE;
 
-            error[Constants.CLASS_KEY] = OAuthToken.name;
+            error[Constants.ERROR_HASH_CLASS] = OAuthToken.name;
 
             throw new SDKException(Constants.TOKEN_ERROR, null, $error, null);
         }
@@ -120,11 +120,16 @@ class OAuthBuilder {
     }
 
     build() {
+
+        if (this._grantToken == null && this._refreshToken == null && this._id == null) {
+            throw new SDKException(Constants.MANDATORY_VALUE_ERROR, Constants.MANDATORY_KEY_ERROR, Constants.OAUTH_MANDATORY_KEYS);
+        }
+
         return new OAuthToken(this._clientID, this._clientSecret, this._grantToken, this._refreshToken, this._redirectURL, this._id);
     }
 }
 
 module.exports = {
-    MasterModel : OAuthBuilder,
-    OAuthBuilder : OAuthBuilder
+    MasterModel: OAuthBuilder,
+    OAuthBuilder: OAuthBuilder
 }

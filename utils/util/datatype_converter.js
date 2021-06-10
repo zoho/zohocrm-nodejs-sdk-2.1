@@ -3,8 +3,7 @@ const Constants = require("./constants").Constants;
 /**
  * This class converts JSON value to the expected object type and vice versa.
  */
-class DatatypeConverter{
-
+class DatatypeConverter {
     static preConverterMap = new Map();
 
     static postConverterMap = new Map();
@@ -12,87 +11,76 @@ class DatatypeConverter{
     /**
      * This method is to initialize the PreConverter and PostConverter lambda functions.
      */
-    static init(){
-
-        if(this.preConverterMap.size != 0 && this.postConverterMap.size != 0){
-
+    static init() {
+        if (this.preConverterMap.size != 0 && this.postConverterMap.size != 0) {
             return;
         }
 
-        var string = (obj)=>{
-
+        var string = (obj) => {
             return obj.toString();
         }
 
-        var integer = (obj)=>{
-
+        var integer = (obj) => {
             return parseInt(obj);
         }
 
-        var long = (obj)=>{
-
+        var long = (obj) => {
             return obj.toString() != Constants.NULL_VALUE ? BigInt(obj) : null;
         }
 
-        var longToString = (obj) =>{
+        var longToString = (obj) => {
             return obj.toString()
         }
 
-        var bool = (obj)=>{
-
+        var bool = (obj) => {
             return Boolean(obj);
         }
 
-        var stringToDateTime = (obj)=>{
-
+        var stringToDateTime = (obj) => {
             return new Date(obj);
         }
 
-        var dateTimeToString = (obj)=>{
-
-            return obj.toISOString().split('.')[0]+"Z";
+        var dateTimeToString = (obj) => {
+            return obj.toISOString().split('.')[0] + "Z";
         }
 
-        var dateToString = (obj)=>{
-
+        var dateToString = (obj) => {
             return obj.toISOString().split('T')[0];
         }
 
-        var stringToDate = (obj)=>{
-
+        var stringToDate = (obj) => {
             return new Date(obj);
         }
 
-        var double = (obj)=>{
-
+        var double = (obj) => {
             return parseFloat(obj.toString());
         }
 
-        var preObject = (obj)=>{
+        var preObject = (obj) => {
             return this.preConvertObjectData(obj);
         }
 
-        var postObject = (obj)=>{
+        var postObject = (obj) => {
             return this.postConvertObjectData(obj);
         }
 
-        this.addToMap("String", string, string);
+        this.addToMap(Constants.STRING_NAMESPACE, string, string);
 
-        this.addToMap("Integer", integer, integer);
+        this.addToMap(Constants.INTEGER_NAMESPACE, integer, integer);
 
-        this.addToMap("Long", long, longToString);
+        this.addToMap(Constants.LONG_NAMESPACE, long, longToString);
 
-        this.addToMap("Boolean", bool, bool);
+        this.addToMap(Constants.BOOLEAN_NAMESPACE, bool, bool);
 
-        this.addToMap("Date", stringToDate, dateToString);
+        this.addToMap(Constants.DATE_NAMESPACE, stringToDate, dateToString);
 
-        this.addToMap("DateTime", stringToDateTime, dateTimeToString);
+        this.addToMap(Constants.DATETIME_NAMESPACE, stringToDateTime, dateTimeToString);
 
-        this.addToMap("Double", double, double);
+        this.addToMap(Constants.DOUBLE_NAMESPACE, double, double);
 
-        this.addToMap("Float", double, double);
+        this.addToMap(Constants.FLOAT_NAMESPACE, double, double);
 
-        this.addToMap("Object", preObject, postObject);
+        this.addToMap(Constants.OBJECT_NAMESPACE, preObject, postObject);
     }
 
     static preConvertObjectData(obj) {
@@ -100,20 +88,19 @@ class DatatypeConverter{
     }
 
     static postConvertObjectData(obj) {
-
-        if(Array.isArray(obj)) {
+        if (Array.isArray(obj)) {
             let list = [];
 
             for (let data of obj) {
-                if(data instanceof Date) {
-                    if(data.getHours() == 0 && data.getMinutes() == 0 && data.getSeconds() == 0) {
-                        list.push(this.postConvert(data, "Date"));
+                if (data instanceof Date) {
+                    if (data.getHours() == 0 && data.getMinutes() == 0 && data.getSeconds() == 0) {
+                        list.push(this.postConvert(data, Constants.DATE_NAMESPACE));
                     }
                     else {
-                        list.push(this.postConvert(data, "DateTime"));
+                        list.push(this.postConvert(data, Constants.DATETIME_NAMESPACE));
                     }
                 }
-                else if(data instanceof Map) {
+                else if (data instanceof Map) {
                     this.postConvertObjectData(data);
                 }
                 else {
@@ -122,24 +109,24 @@ class DatatypeConverter{
             }
             return list;
         }
-        else if(obj instanceof Map) {
+        else if (obj instanceof Map) {
             let requestObject = {};
 
-            for (let key of Array.from(obj.keys())){
+            for (let key of Array.from(obj.keys())) {
                 let value = obj.get(key);
 
-                if(Array.isArray(value)) {
+                if (Array.isArray(value)) {
                     requestObject[key] = this.postConvertObjectData(value);
                 }
-                else if(value instanceof Date) {
-                    if(value.getHours() == 0 && value.getMinutes() == 0 && value.getSeconds() == 0) {
-                        requestObject[key] = this.postConvert(value, "Date");
+                else if (value instanceof Date) {
+                    if (value.getHours() == 0 && value.getMinutes() == 0 && value.getSeconds() == 0) {
+                        requestObject[key] = this.postConvert(value, Constants.DATE_NAMESPACE);
                     }
                     else {
-                        requestObject[key] = this.postConvert(value, "DateTime");
+                        requestObject[key] = this.postConvert(value, Constants.DATETIME_NAMESPACE);
                     }
                 }
-                else if(value instanceof Map) {
+                else if (value instanceof Map) {
                     requestObject[key] = this.postConvertObjectData(value);
                 }
                 else {
@@ -149,12 +136,12 @@ class DatatypeConverter{
 
             return requestObject;
         }
-        else if(obj instanceof Date) {
-            if(obj.getHours() == 0 && obj.getMinutes() == 0 && obj.getSeconds() == 0) {
-                return this.postConvert(obj, "Date");
+        else if (obj instanceof Date) {
+            if (obj.getHours() == 0 && obj.getMinutes() == 0 && obj.getSeconds() == 0) {
+                return this.postConvert(obj, Constants.DATE_NAMESPACE);
             }
             else {
-                return this.postConvert(obj, "DateTime");
+                return this.postConvert(obj, Constants.DATETIME_NAMESPACE);
             }
         }
         else {
@@ -183,7 +170,11 @@ class DatatypeConverter{
     static preConvert(obj, type) {
         this.init();
 
-        return this.preConverterMap.get(type)(obj);
+        if (this.preConverterMap.has(type)) {
+            return this.preConverterMap.get(type)(obj);
+        }
+
+        return obj;
     }
 
     /**
@@ -195,11 +186,15 @@ class DatatypeConverter{
     static postConvert(obj, type) {
         this.init();
 
-        return this.postConverterMap.get(type)(obj);
+        if (this.postConverterMap.has(type)) {
+            return this.postConverterMap.get(type)(obj);
+        }
+
+        return obj;
     }
 }
 
 module.exports = {
-    MasterModel : DatatypeConverter,
-    DatatypeConverter : DatatypeConverter
+    MasterModel: DatatypeConverter,
+    DatatypeConverter: DatatypeConverter
 }

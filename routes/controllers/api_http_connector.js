@@ -8,7 +8,7 @@ const Initializer = require("../initializer").Initializer;
 /**
  * This module is to make HTTP connections, trigger the requests and receive the response
  */
-class APIHTTPConnector{
+class APIHTTPConnector {
 
 	url;
 
@@ -123,33 +123,33 @@ class APIHTTPConnector{
 
 		var modifiedRequestBody = "";
 
-		if(this.contentType != null) {
+		if (this.contentType != null) {
 			this.setContentTypeHeader();
 		}
 
-		if(this.headers) {
-			this.headers.forEach(function(value, key) {
+		if (this.headers) {
+			this.headers.forEach(function (value, key) {
 				apiHeaders[key] = value;
 			});
 		}
 
 		if (this.parameters != null && this.parameters.size > 0) {
-            this.setQueryParams(this.parameters);
+			this.setQueryParams(this.parameters);
 		}
 
-		if (Array.from(Object.keys(this.requestBody)).length > 0){
+		if (Array.from(Object.keys(this.requestBody)).length > 0) {
 			modifiedRequestBody = await converterInstance.appendToRequest(this, null);
 		}
 
 		let initializer = await Initializer.getInitializer();
 
 		var requestDetails = {
-			method : this.requestMethod,
-			headers : apiHeaders,
-			body : modifiedRequestBody,
+			method: this.requestMethod,
+			headers: apiHeaders,
+			body: modifiedRequestBody,
 			encoding: "utf8",
-			allowGetBody : true,
-			throwHttpErrors : false
+			allowGetBody: true,
+			throwHttpErrors: false
 		};
 
 		let timeout = initializer.getSDKConfig().getTimeout();
@@ -158,34 +158,34 @@ class APIHTTPConnector{
 			requestDetails.timeout = timeout;
 		}
 
-		if(initializer.getRequestProxy() != null) {
+		if (initializer.getRequestProxy() != null) {
 			let requestProxy = initializer.getRequestProxy();
 
 			let proxyAuthorization = null;
 
-			if(requestProxy.user != null) {
+			if (requestProxy.user != null) {
 				proxyAuthorization = requestProxy.getUser() + ":" + requestProxy.getPassword();
 			}
 
 			let httpTunnel = tunnel.httpOverHttp({
-				proxy : {
-					host : requestProxy.getHost(),
-					port : requestProxy.getPort(),
-					proxyAuth : proxyAuthorization
+				proxy: {
+					host: requestProxy.getHost(),
+					port: requestProxy.getPort(),
+					proxyAuth: proxyAuthorization
 				}
 			});
 
 			let httpsTunnel = tunnel.httpsOverHttp({
-				proxy : {
-					host : requestProxy.getHost(),
-					port : requestProxy.getPort(),
-					proxyAuth : proxyAuthorization
+				proxy: {
+					host: requestProxy.getHost(),
+					port: requestProxy.getPort(),
+					proxyAuth: proxyAuthorization
 				}
 			});
 
 			let agents = {
-				http : httpTunnel,
-				https : httpsTunnel
+				http: httpTunnel,
+				https: httpsTunnel
 			}
 
 			requestDetails.agent = agents;
@@ -196,6 +196,33 @@ class APIHTTPConnector{
 		Logger.info(this.toString());
 
 		return await got(this.url, requestDetails);
+	}
+
+	setQueryParams(parameters) {
+		var params;
+
+		parameters.forEach(function (value, key) {
+			if (parameters.has(key)) {
+				if (params) {
+					params = params + key + '=' + encodeURI(value) + '&';
+				}
+				else {
+					params = key + '=' + encodeURI(value) + '&';
+				}
+			}
+		});
+
+		this.url = this.url + '?' + params;
+	}
+
+	setContentTypeHeader() {
+		for (let url of Constants.SET_TO_CONTENT_TYPE) {
+			if (this.url.includes(url)) {
+				this.headers.set(Constants.CONTENT_TYPE_HEADER, this.contentType);
+
+				return;
+			}
+		}
 	}
 
 	toString() {
@@ -213,43 +240,15 @@ class APIHTTPConnector{
 	proxyLog(requestProxy) {
 		let proxyDetails = Constants.PROXY_SETTINGS.concat(Constants.PROXY_HOST).concat(requestProxy.getHost()).concat(" , ").concat(Constants.PROXY_PORT).concat(requestProxy.getPort().toString());
 
-		if(requestProxy.user != null) {
+		if (requestProxy.user != null) {
 			proxyDetails = proxyDetails.concat(" , ").concat(Constants.PROXY_USER).concat(requestProxy.getUser());
 		}
 
 		return proxyDetails;
 	}
-
-	setQueryParams(parameters) {
-		var params;
-
-		parameters.forEach(function(value, key) {
-			if (parameters.has(key)) {
-            	if (params) {
-                	params = params + key + '=' + encodeURI(value) + '&';
-            	}
-            	else {
-                	params = key + '=' + encodeURI(value) + '&';
-				}
-        	}
-		});
-
-    	this.url = this.url + '?' + params;
-	}
-
-	setContentTypeHeader() {
-		for (let url of Constants.SET_TO_CONTENT_TYPE) {
-			if(this.url.includes(url)) {
-				this.headers.set(Constants.CONTENT_TYPE_HEADER, this.contentType);
-
-				return;
-			}
-		}
-	}
-
 }
 
 module.exports = {
-    MasterModel : APIHTTPConnector,
-    APIHTTPConnector : APIHTTPConnector
+	MasterModel: APIHTTPConnector,
+	APIHTTPConnector: APIHTTPConnector
 }

@@ -13,7 +13,6 @@ class Profile{
 	default1;
 	description;
 	id;
-	category;
 	custom;
 	createdBy;
 	sections;
@@ -239,28 +238,6 @@ class Profile{
 		}
 		this.id = id;
 		this.keyModified.set("id", 1);
-
-	}
-
-	/**
-	 * The method to get the category
-	 * @returns {Boolean} A Boolean representing the category
-	 */
-	getCategory()	{
-		return this.category;
-
-	}
-
-	/**
-	 * The method to set the value to category
-	 * @param {Boolean} category A Boolean representing the category
-	 */
-	setCategory(category)	{
-		if((category != null) && (!(Object.prototype.toString.call(category) == "[object Boolean]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: category EXPECTED TYPE: Boolean", null, null);
-		}
-		this.category = category;
-		this.keyModified.set("category", 1);
 
 	}
 

@@ -1,7 +1,7 @@
-class XMLConverter{
+class XMLConverter {
 
 }
 module.exports = {
-    MasterModel : XMLConverter,
-    XMLConverter : XMLConverter
+    MasterModel: XMLConverter,
+    XMLConverter: XMLConverter
 }

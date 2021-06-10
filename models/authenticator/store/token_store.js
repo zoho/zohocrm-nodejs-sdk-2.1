@@ -63,6 +63,6 @@ class TokenStore {
 }
 
 module.exports = {
-    MasterModel : TokenStore,
-    TokenStore : TokenStore
+    MasterModel: TokenStore,
+    TokenStore: TokenStore
 }

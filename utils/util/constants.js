@@ -1,6 +1,6 @@
 class Constants {
     static TYPE_VS_DATATYPE = new Map([
-        ["map","[object Map]"],
+        ["map", "[object Map]"],
         ["hashmap", "[object Map]"],
         ["string", "[object String]"],
         ["list", "[object Array]"],
@@ -63,13 +63,13 @@ class Constants {
 
     static ZOHO_SDK = "X-ZOHO-SDK";
 
-    static SDK_VERSION = "2.0.0-beta.3";
+    static SDK_VERSION = "2.0.0";
 
     static MYSQL_HOST = "localhost";
 
-	static MYSQL_DATABASE_NAME = "zohooauth";
+    static MYSQL_DATABASE_NAME = "zohooauth";
 
-	static MYSQL_USER_NAME = "root";
+    static MYSQL_USER_NAME = "root";
 
     static MYSQL_PORT_NUMBER = "3306";
 
@@ -79,7 +79,7 @@ class Constants {
 
     static DELETE_TOKEN_DB_ERROR = "Exception in deleteToken - DBStore : ";
 
-	static DELETE_TOKENS_DB_ERROR = "Exception in deleteTokens - DBStore : ";
+    static DELETE_TOKENS_DB_ERROR = "Exception in deleteTokens - DBStore : ";
 
     static SAVE_TOKEN_DB_ERROR = "Exception in saveToken - DBStore : ";
 
@@ -170,6 +170,10 @@ class Constants {
     static DATETIME_NAMESPACE = 'DateTime'
 
     static DATE_NAMESPACE = 'Date'
+
+    static FLOAT_NAMESPACE = 'Float'
+
+    static OBJECT_NAMESPACE = 'Object'
 
     static DOUBLE_COLON = '::'
 
@@ -351,7 +355,7 @@ class Constants {
 
     static PRODUCT_DETAILS = "Product_Details";
 
-	static PRICING_DETAILS = "Pricing_Details";
+    static PRICING_DETAILS = "Pricing_Details";
 
     static PARTICIPANT_API_NAME = "Participants";
 
@@ -365,7 +369,7 @@ class Constants {
 
     static ATTACHMENTS = "$attachments";
 
-    static INVENTORY_MODULES = ["invoices", "sales_orders","purchase_orders","quotes"];
+    static INVENTORY_MODULES = ["invoices", "sales_orders", "purchase_orders", "quotes"];
 
     static PRICE_BOOKS = "price_books";
 
@@ -381,7 +385,7 @@ class Constants {
 
     static SUBFORM = "subform";
 
-	static LOOKUP = "lookup";
+    static LOOKUP = "lookup";
 
     static SE_MODULE = "se_module";
 
@@ -405,9 +409,9 @@ class Constants {
 
     static SET_API_URL_EXCEPTION = "Exception in setting API URL : ";
 
-	static AUTHENTICATION_EXCEPTION = "Exception in authenticating current request : ";
+    static AUTHENTICATION_EXCEPTION = "Exception in authenticating current request : ";
 
-	static FORM_REQUEST_EXCEPTION = "Exception in forming request body : ";
+    static FORM_REQUEST_EXCEPTION = "Exception in forming request body : ";
 
     static API_CALL_EXCEPTION = "Exception in current API call execution : ";
 
@@ -423,7 +427,7 @@ class Constants {
 
     static FILE_BODY_WRAPPER = "file_body_wrapper";
 
-    static USER_NOT_FOUND_ERROR_MESSAGE  = "Given user not found in SDK configuration details";
+    static USER_NOT_FOUND_ERROR_MESSAGE = "Given user not found in SDK configuration details";
 
     static USER_NOT_FOUND_ERROR = "USER NOT FOUND ERROR";
 
@@ -447,7 +451,7 @@ class Constants {
 
     static URL = "URL";
 
-	static HEADERS = "HEADERS";
+    static HEADERS = "HEADERS";
 
     static PARAMS = "PARAMS";
 
@@ -455,11 +459,11 @@ class Constants {
 
     static UNDERSCORE = "_";
 
-	static RELATED_LISTS = "Related_Lists";
+    static RELATED_LISTS = "Related_Lists";
 
-	static API_NAME = "api_name";
+    static API_NAME = "api_name";
 
-	static HREF = "href";
+    static HREF = "href";
 
     static NO_CONTENT_STATUS_CODE = 204;
 
@@ -539,9 +543,9 @@ class Constants {
 
     static PROXY_SETTINGS = "Proxy settings - ";
 
-	static PROXY_HOST = "Host: ";
+    static PROXY_HOST = "Host: ";
 
-	static PROXY_PORT = "Port: ";
+    static PROXY_PORT = "Port: ";
 
     static PROXY_USER = "User: ";
 
@@ -563,9 +567,9 @@ class Constants {
 
     static GET_TOKEN_BY_ID_FILE_ERROR = "Exception in getTokenById - FileStore : Given ID is invalid";
 
-    static CLIENT_ID_NULL_ERROR_MESSAGE = "ClientID MUST NOT be null" ;
+    static CLIENT_ID_NULL_ERROR_MESSAGE = "ClientID MUST NOT be null";
 
-    static CLIENT_SECRET_NULL_ERROR_MESSAGE = "ClientSecret MUST NOT be null" ;
+    static CLIENT_SECRET_NULL_ERROR_MESSAGE = "ClientSecret MUST NOT be null";
 
     static IS_GENERATE_REQUEST_BODY = ["PATCH", "POST", "PUT"];
 
@@ -588,29 +592,29 @@ class Constants {
     static REGULAR_EXPRESSION = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     static DEFAULT_MODULENAME_VS_APINAME = new Map([
-        ["leads","Leads"],
-        ["contacts","Contacts"],
-        ["accounts","Accounts"],
-        ["deals","Deals"],
-        ["tasks","Tasks"],
-        ["events","Events"],
-        ["activities","Activities"],
-        ["calls","Calls"],
-        ["products","Products"],
-        ["quotes","Quotes"],
-        ["sales_orders","Sales_Orders"],
-        ["purchase_orders","Purchase_Orders"],
-        ["invoices","Invoices"],
-        ["campaigns","Campaigns"],
-        ["vendors","Vendors"],
-        ["price_books","Price_Books"],
-        ["cases","Cases"],
-        ["solutions","Solutions"],
-        ["visits","Visits"],
-        ["approvals","Approvals"],
-        ["notes","Notes"],
-        ["attachments","Attachments"],
-        ["actions_performed","Actions_Performed"]
+        ["leads", "Leads"],
+        ["contacts", "Contacts"],
+        ["accounts", "Accounts"],
+        ["deals", "Deals"],
+        ["tasks", "Tasks"],
+        ["events", "Events"],
+        ["activities", "Activities"],
+        ["calls", "Calls"],
+        ["products", "Products"],
+        ["quotes", "Quotes"],
+        ["sales_orders", "Sales_Orders"],
+        ["purchase_orders", "Purchase_Orders"],
+        ["invoices", "Invoices"],
+        ["campaigns", "Campaigns"],
+        ["vendors", "Vendors"],
+        ["price_books", "Price_Books"],
+        ["cases", "Cases"],
+        ["solutions", "Solutions"],
+        ["visits", "Visits"],
+        ["approvals", "Approvals"],
+        ["notes", "Notes"],
+        ["attachments", "Attachments"],
+        ["actions_performed", "Actions_Performed"]
     ]);
 
     static PHOTO_SUPPORTED_MODULES = ["leads", "contacts", "accounts", "products", "vendors"];
@@ -624,10 +628,10 @@ class Constants {
     static UPLOAD_PHOTO_UNSUPPORTED_MESSAGE = "Photo Upload Operation is not supported by the module: ";
 
     static KEY_VS_INVENTORY_MODULE = new Map([
-        ["Quoted_Items","quotes"],
-        ["Invoiced_Items","invoices"],
-        ["Purchase_Items","purchase_orders"],
-        ["Ordered_Items","sales_orders"]
+        ["Quoted_Items", "quotes"],
+        ["Invoiced_Items", "invoices"],
+        ["Purchase_Items", "purchase_orders"],
+        ["Ordered_Items", "sales_orders"]
     ]);
 
     static MULTI_SELECT_LOOKUP = "multiselectlookup";
@@ -647,9 +651,25 @@ class Constants {
     static INVENTORYTEMPLATE = "inventorytemplate";
 
     static TEMPLATE = "core/com/zoho/crm/api/send_mail/template";
+
+    static OAUTH_MANDATORY_KEYS = ["grantToken", "refreshToken", "id"];
+
+    static INVALID_TOKEN_ERROR = "INVALID TOKEN ERROR";
+
+    static SDK_MODULE_METADATA = "SDK-MODULE-METADATA";
+
+    static INVENTORY_MODULES_ITEMS = ["invoiced_items", "quoted_items", "purchase_items", "ordered_items"];
+
+    static PRODUCT_NAME = "Product_Name";
+
+    static LINEITEM_PRODUCT = "core/com/zoho/crm/api/record/line_item_product";
+
+    static DISCOUNT = "Discount";
+
+    static LINETAX = "core/com/zoho/crm/api/record/line_tax";
 }
 
 module.exports = {
-    MasterModel : Constants,
-    Constants : Constants
+    MasterModel: Constants,
+    Constants: Constants
 };

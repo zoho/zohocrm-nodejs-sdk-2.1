@@ -4,6 +4,7 @@ const SDKException = require("../exception/sdk_exception").MasterModel;
 class Org{
 
 	country;
+	hierarchyPreferences;
 	photoId;
 	city;
 	description;
@@ -33,6 +34,7 @@ class Org{
 	companyName;
 	privacySettings;
 	primaryEmail;
+	hipaaComplianceEnabled;
 	isoCode;
 	keyModified = new Map();
 	/**
@@ -54,6 +56,29 @@ class Org{
 		}
 		this.country = country;
 		this.keyModified.set("country", 1);
+
+	}
+
+	/**
+	 * The method to get the hierarchyPreferences
+	 * @returns {HierarchyPreference} An instance of HierarchyPreference
+	 */
+	getHierarchyPreferences()	{
+		return this.hierarchyPreferences;
+
+	}
+
+	/**
+	 * The method to set the value to hierarchyPreferences
+	 * @param {HierarchyPreference} hierarchyPreferences An instance of HierarchyPreference
+	 */
+	setHierarchyPreferences(hierarchyPreferences)	{
+		const HierarchyPreference = require("./hierarchy_preference").MasterModel;
+		if((hierarchyPreferences != null) && (!(hierarchyPreferences instanceof HierarchyPreference)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: hierarchyPreferences EXPECTED TYPE: HierarchyPreference", null, null);
+		}
+		this.hierarchyPreferences = hierarchyPreferences;
+		this.keyModified.set("hierarchy_preferences", 1);
 
 	}
 
@@ -693,6 +718,28 @@ class Org{
 		}
 		this.primaryEmail = primaryEmail;
 		this.keyModified.set("primary_email", 1);
+
+	}
+
+	/**
+	 * The method to get the hipaaComplianceEnabled
+	 * @returns {Boolean} A Boolean representing the hipaaComplianceEnabled
+	 */
+	getHipaaComplianceEnabled()	{
+		return this.hipaaComplianceEnabled;
+
+	}
+
+	/**
+	 * The method to set the value to hipaaComplianceEnabled
+	 * @param {Boolean} hipaaComplianceEnabled A Boolean representing the hipaaComplianceEnabled
+	 */
+	setHipaaComplianceEnabled(hipaaComplianceEnabled)	{
+		if((hipaaComplianceEnabled != null) && (!(Object.prototype.toString.call(hipaaComplianceEnabled) == "[object Boolean]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: hipaaComplianceEnabled EXPECTED TYPE: Boolean", null, null);
+		}
+		this.hipaaComplianceEnabled = hipaaComplianceEnabled;
+		this.keyModified.set("hipaa_compliance_enabled", 1);
 
 	}
 

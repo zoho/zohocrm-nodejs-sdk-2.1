@@ -8,14 +8,14 @@ const fs = require("fs");
  * This class is to process the download file and stream response.
  * @extends Converter
  */
-class Downloader extends Converter{
+class Downloader extends Converter {
     uniqueValuesMap = [];
 
     constructor(commonApiHandler) {
         super(commonApiHandler);
     }
 
-    appendToRequest(requestBase,requestObject) {
+    appendToRequest(requestBase, requestObject) {
         return;
     }
 
@@ -24,47 +24,47 @@ class Downloader extends Converter{
     }
 
     getWrappedResponse(response, pack) {
-        return this.getResponse(response,pack);
+        return this.getResponse(response, pack);
     }
 
     getResponse(response, pack) {
         var instance = null;
 
-        var classDetail = Initializer.jsonDetails[pack];
+        var recordJsonDetails = Initializer.jsonDetails[pack];
 
-        if (classDetail.hasOwnProperty(Constants.INTERFACE) && classDetail[Constants.INTERFACE]){
-            let classes = classDetail[Constants.CLASSES];
+        if (recordJsonDetails.hasOwnProperty(Constants.INTERFACE) && recordJsonDetails[Constants.INTERFACE]) {
+            let classes = recordJsonDetails[Constants.CLASSES];
 
             for (let index = 0; index < classes.length; index++) {
-                let eachClass = classes[index];
+                let className = classes[index];
 
-                if(eachClass.toString().includes(Constants.FILE_BODY_WRAPPER)){
-                    return this.getResponse(response, eachClass);
+                if (className.toString().includes(Constants.FILE_BODY_WRAPPER)) {
+                    return this.getResponse(response, className);
                 }
             }
         }
-        else{
+        else {
             let ClassName = require("../../" + pack).MasterModel;
 
             instance = new ClassName();
 
-            for (let memberName in classDetail) {
-                var memberDetail = classDetail[memberName];
+            for (let memberName in recordJsonDetails) {
+                var memberJsonDetails = recordJsonDetails[memberName];
 
-                var type = memberDetail[Constants.TYPE];
+                var type = memberJsonDetails[Constants.TYPE];
 
-                if(type === Constants.STREAM_WRAPPER_CLASS_PATH){
+                if (type === Constants.STREAM_WRAPPER_CLASS_PATH) {
 
                     var fileName = "";
 
                     let contentDisposition = (response.headers[Constants.CONTENT_DISPOSITION]).toString();
 
-                    if(contentDisposition.includes("'")){
+                    if (contentDisposition.includes("'")) {
                         let start_index = contentDisposition.lastIndexOf("'");
 
                         fileName = contentDisposition.substring(start_index + 1);
                     }
-                    else if(contentDisposition.includes("\"")){
+                    else if (contentDisposition.includes("\"")) {
                         let start_index = contentDisposition.lastIndexOf("=");
 
                         fileName = contentDisposition.substring(start_index + 1).replace(/"/g, "");
@@ -73,7 +73,7 @@ class Downloader extends Converter{
                     var instanceValue = new StreamWrapper(fileName, response.rawBody, null);
                 }
 
-               Reflect.set(instance, memberName, instanceValue);
+                Reflect.set(instance, memberName, instanceValue);
             }
 
             return instance;
@@ -82,6 +82,6 @@ class Downloader extends Converter{
 }
 
 module.exports = {
-    MasterModel : Downloader,
-    Downloader : Downloader
+    MasterModel: Downloader,
+    Downloader: Downloader
 };

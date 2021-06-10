@@ -99,11 +99,11 @@ The persistence is achieved by writing an implementation of the inbuilt **TokenS
 
 Note:
 
-- id string.
+- id is a string.
 
-- user instanceof **UserSignature**.
+- user is an instance of **UserSignature**.
 
-- token instanceof **Token** interface.
+- token is an instance of **Token** interface.
 
 ### DataBase Persistence
 
@@ -131,6 +131,11 @@ In case the user prefers to use default DataBase persistence, **MySQL** can be u
 
   - redirect_url varchar(255)
 
+Note:
+
+  - Custom database name and table name can be set in DBStore instance
+
+
 #### MySQL Query
 
 ```sql
@@ -154,11 +159,12 @@ CREATE TABLE oauthtoken (
 const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
 /*
  * DBStore takes the following parameters
- * 1 -> DataBase host name. Default value "localhost"
- * 2 -> DataBase name. Default  value "zohooauth"
- * 3 -> DataBase user name. Default value "root"
- * 4 -> DataBase password. Default value ""
- * 5 -> DataBase port number. Default value "3306"
+ * host -> DataBase host name. Default value "localhost"
+ * databaseName -> DataBase name. Default  value "zohooauth"
+ * userName -> DataBase user name. Default value "root"
+ * password -> DataBase password. Default value ""
+ * portNumber -> DataBase port number. Default value "3306"
+ * tableName -> Table Name. Default value "oauthtoken"
 */
 
 let tokenstore = new DBStore().build();
@@ -177,9 +183,9 @@ let tokenstore = new DBBuilder()
 
 In case of default File Persistence, the user can persist tokens in the local drive, by providing the the absolute file path to the FileStore object. The File contains the following
 
-- The File contains.
+- The File contains
 
-    - id
+  - id
 
   - user_mail
 
@@ -210,7 +216,7 @@ let tokenstore = new FileStore("/Users/username/Documents/nodejs_sdk_tokens.txt"
 
 ### Custom Persistence
 
-To use Custom Persistence, the user must extend **TokenStore Class** (**@zohocrm/nodejs-sdk/models/authenticator/store/token_store**) and override the methods.
+To use Custom Persistence, the user must extend **[TokenStore Class](models/authenticator/store/token_store.js)** and override the methods.
 
 ```js
 const TokenStore = require('@zohocrm/nodejs-sdk/models/authenticator/store/token_store').TokenStore;
@@ -287,13 +293,14 @@ module.exports = {CustomStore}
 Before you get started with creating your NodeJS application, you need to register your client and authenticate the app with Zoho.
 
 - Create an instance of **Logger** Class to log exception and API information.
+
     ```js
     const {Levels} = require("@zohocrm/nodejs-sdk/routes/logger/logger");
     const LogBuilder = require("@zohocrm/nodejs-sdk/routes/logger/log_builder").LogBuilder;
     /*
-     * Create an instance of Logger Class that takes two parameters
-     * 1 -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
-     * 2 -> Absolute file path, where messages need to be logged.
+    * Create an instance of Logger Class that requires the following
+    * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
+    * filePath -> Absolute file path, where messages need to be logged.
     */
     let logger = new LogBuilder()
         .level(Levels.INFO)
@@ -302,6 +309,7 @@ Before you get started with creating your NodeJS application, you need to regist
     ```
 
 - Create an instance of **UserSignature** Class that identifies the current user.
+
     ```js
     const UserSignature = require( "@zohocrm/nodejs-sdk/routes/user_signature").UserSignature;
     //Create an UserSignature instance that takes user Email as parameter
@@ -309,6 +317,7 @@ Before you get started with creating your NodeJS application, you need to regist
     ```
 
 - Configure API environment which decides the domain and the URL to make API calls.
+
     ```js
     const USDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/us_data_center").USDataCenter;
     /*
@@ -320,16 +329,36 @@ Before you get started with creating your NodeJS application, you need to regist
     let environment = USDataCenter.PRODUCTION();
     ```
 
-- Create an instance of **[OAuthToken](resources/token/oauth_token.md#oauthtoken)** with the information that you get after registering your Zoho client.
+- Create an instance of **[OAuthToken](models/authenticator/oauth_token.js)** with the information that you get after registering your Zoho client.
+
     ```js
     const OAuthBuilder = require("@zohocrm/nodejs-sdk/models/authenticator/oauth_builder").OAuthBuilder;
+
     /*
-     * Create a Token instance
-     * 1 -> OAuth client id.
-     * 2 -> OAuth client secret.
-     * 3 -> REFRESH token.
-     * 4 -> OAuth redirect URL.
+    * Create a Token instance that requires the following
+    * clientId -> OAuth client id.
+    * clientSecret -> OAuth client secret.
+    * refreshToken -> REFRESH token.
+    * grantToken -> GRANT token.
+    * id -> User unique id.
+    * redirectURL -> OAuth redirect URL.
     */
+    //Create a Token instance
+    // if refresh token is available
+    // The SDK throws an exception, if the given id is invalid.
+    let token = new OAuthBuilder()
+    .id("id")
+    .build();
+
+    // if grant token is available
+    let token = new OAuthBuilder()
+    .clientId("clientId")
+    .clientSecret("clientSecret")
+    .grantToken("grantToken")
+    .redirectURL("redirectURL")
+    .build();
+
+    // if ID (obtained from persistence) is available
     let token = new OAuthBuilder()
     .clientId("clientId")
     .clientSecret("clientSecret")
@@ -339,15 +368,18 @@ Before you get started with creating your NodeJS application, you need to regist
     ```
 
 - Create an instance of **TokenStore** to persist tokens, used for authenticating all the requests.
+
     ```js
     const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
+
     /*
-     * DBStore takes the following parameters
-     * 1 -> DataBase host name. Default value "localhost"
-     * 2 -> DataBase name. Default  value "zohooauth"
-     * 3 -> DataBase user name. Default value "root"
-     * 4 -> DataBase password. Default value ""
-     * 5 -> DataBase port number. Default value "3306"
+    * Create an instance of DBStore that requires the following
+    * host -> DataBase host name. Default value "localhost"
+    * databaseName -> DataBase name. Default  value "zohooauth"
+    * userName -> DataBase user name. Default value "root"
+    * password -> DataBase password. Default value ""
+    * portNumber -> DataBase port number. Default value "3306"
+    * tabletName -> DataBase table name. Default value "oauthtoken"
     */
 
     let tokenstore = new DBStore().build();
@@ -360,9 +392,14 @@ Before you get started with creating your NodeJS application, you need to regist
         .tableName("tableName")
         .password("password")
         .build();
+
+    let tokenstore = new FileStore("absolute_file_path");
+
+    let tokenstore = new CustomStore();
     ```
 
 - Create an instance of **SDKConfig** containing the SDK configuration.
+
     ```js
     const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").SDKConfigBuilder;
 
@@ -380,20 +417,22 @@ Before you get started with creating your NodeJS application, you need to regist
     ```
 
 - The path containing the absolute directory path (in the key resourcePath) to store user-specific files containing information about fields in modules.
+
     ```js
     let resourcePath = "/Users/user_name/Documents/nodejs-app";
     ```
 
-- Create an instance of [RequestProxy](resources/request_proxy.md) containing the proxy properties of the user.
+- Create an instance of [RequestProxy](routes/request_proxy.js) containing the proxy properties of the user.
+
     ```js
     const RequestProxy = require( "@zohocrm/nodejs-sdk/routes/request_proxy").RequestProxy;
 
     /*
      * RequestProxy class takes the following parameters
-     * 1 -> Host
-     * 2 -> Port Number
-     * 3 -> User Name. Default null.
-     * 4 -> Password. Default null
+     * host -> Host
+     * port -> Port Number
+     * user -> User Name. Default null.
+     * password -> Password. Default null
      */
     let requestProxy = new ProxyBuilder()
      .host("proxyHost")
@@ -422,13 +461,12 @@ const ProxyBuilder = require( "@zohocrm/nodejs-sdk/routes/proxy_builder").ProxyB
 
 class Initializer {
 
-    static async initialize(){
-
-        /*
-		 * Create an instance of Logger Class that takes two parameters
-		 * 1 -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
-		 * 2 -> Absolute file path, where messages need to be logged.
-		 */
+    static async initialize() {
+       /*
+        * Create an instance of Logger Class that requires the following
+        * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
+        * filePath -> Absolute file path, where messages need to be logged.
+        */
         let logger = new LogBuilder()
         .level(Levels.INFO)
         .filePath("/Users/user_name/Documents/nodejs_sdk_log.log")
@@ -448,29 +486,36 @@ class Initializer {
 
         /*
 		 * Create a Token instance
-		 * 1 -> OAuth client id.
-		 * 2 -> OAuth client secret.
-		 * 3 -> REFRESH/GRANT token.
-		 * 4 -> token type.
-         * 5 -> OAuth redirect URL. Default value is null
+		 * clientId -> OAuth client id.
+		 * clientSecret -> OAuth client secret.
+		 * grantToken -> GRANT token.
+         * redirectURL -> OAuth redirect URL. Default value is null
 		 */
         let token = new OAuthBuilder()
         .clientId("clientId")
         .clientSecret("clientSecret")
         .grantToken("GRANT Token")
-        .refreshToken("REFRESH Token")
         .redirectURL("redirectURL")
         .build();
 
         /*
-		* Create an instance of TokenStore.
-		 * 1 -> DataBase host name. Default "localhost"
-		 * 2 -> DataBase name. Default "zohooauth"
-		 * 3 -> DataBase user name. Default "root"
-		 * 4 -> DataBase password. Default ""
-		 * 5 -> DataBase port number. Default "3306"
-		 */
-        // let tokenstore = new DBStore().build();
+        * TokenStore can be any of the following
+        * DB Persistence - Create an instance of DBStore
+        * File Persistence - Create an instance of FileStore
+        * Custom Persistence - Create an instance of CustomStore
+        */
+
+        /*
+		* Create an instance of DBStore.
+		 * host -> DataBase host name. Default "localhost"
+		 * databaseName -> DataBase name. Default "zohooauth"
+		 * userName -> DataBase user name. Default "root"
+		 * password -> DataBase password. Default ""
+		 * portNumber -> DataBase port number. Default "3306"
+         * tableName -> DataBase table name. Default value "oauthtoken"
+		*/
+
+        // let tokenstore = new DBBuilder().build();
 
         let tokenstore = new DBBuilder()
             .host("hostName")
@@ -484,6 +529,8 @@ class Initializer {
 		 * Create an instance of FileStore that takes absolute file path as parameter
 		 */
         // let tokenstore = new FileStore("/Users/username/Documents/nodejs_sdk_tokens.txt");
+
+        // let tokenstore = new CustomStore();
 
         /*
      	 * autoRefreshFields
@@ -504,10 +551,10 @@ class Initializer {
 
         /*
 		 * Create an instance of RequestProxy class that takes the following parameters
-		 * 1 -> Host
-		 * 2 -> Port Number
-		 * 3 -> User Name
-		 * 4 -> Password
+		 * host -> Host
+		 * port -> Port Number
+		 * user -> User Name
+		 * password -> Password
 		 */
         let requestProxy = new ProxyBuilder()
             .host("proxyHost")
@@ -517,15 +564,15 @@ class Initializer {
             .build();
 
         /*
-         * Call the static initialize method of Initializer class that takes the following arguments
-         * 1 -> UserSignature instance
-         * 2 -> Environment instance
-         * 3 -> Token instance
-         * 4 -> TokenStore instance
-         * 5 -> SDKConfig instance
-         * 6 -> resourcePath
-         * 7 -> Logger instance. Default value is null
-         * 8 -> RequestProxy instance. Default value is null
+         * Set the following in InitializeBuilder
+         * user -> UserSignature instance
+         * environment -> Environment instance
+         * token -> Token instance
+         * store -> TokenStore instance
+         * SDKConfig -> SDKConfig instance
+         * resourcePath -> resourcePath
+         * logger -> Logger instance. Default value is null
+         * requestProxy -> RequestProxy instance. Default value is null
          */
         // The SDK can be initialized by any of the following methods
        (await new InitializeBuilder())
@@ -536,6 +583,7 @@ class Initializer {
         .SDKConfig(sdkConfig)
         .resourcePath(resourcePath)
         .logger(logger)
+        .requestProxy(requestProxy)
         .initialize();
     }
 }
@@ -551,7 +599,7 @@ Initializer.initialize()
 
 ## Responses and Exceptions
 
-All SDK method calls return an instance of **[APIResponse](resources/util/api_response.md#apiresponse)**.
+All SDK method calls return an instance of **[APIResponse](routes/controllers/api_response.js)**.
 
 After a successful API request, the **getObject()** method returns an instance of the ResponseWrapper (for **GET**) or the ActionWrapper (for **POST, PUT, DELETE**).
 
@@ -583,6 +631,9 @@ However, some specific operations have different expected objects, such as the f
     - **MassUpdateActionWrapper**
     - **MassUpdateResponseWrapper**
 
+- For Transfer Pipeline operation
+  - **APIResponse&lt;TransferActionHandler&gt;**
+
 ### GET Requests
 
 - The **getObject()** returns instance of one of the following classes, based on the return type.
@@ -606,6 +657,7 @@ However, some specific operations have different expected objects, such as the f
     - **MassUpdateActionWrapper**
     - **ConvertActionWrapper**
     - **APIException**
+    - **TransferActionWrapper**
 
 - These wrapper classes may contain one or an array of instances of the following classes, depending on the response
     - **SuccessResponse Class**, if the request was successful.
@@ -613,15 +665,15 @@ However, some specific operations have different expected objects, such as the f
 
 For example, when you insert two records, and one of them was inserted successfully while the other one failed, the ActionWrapper will contain one instance each of the SuccessResponse and APIException classes.
 
-All other exceptions such as SDK anomalies and other unexpected behaviours are thrown under the **[SDKException](resources/exception/sdk_exception.md#sdkexception)** class.
+All other exceptions such as SDK anomalies and other unexpected behaviours are thrown under the **[SDKException](core/com/zoho/crm/api/exception/sdk_exception.js)** class.
 
 ## Multi-User support in the NodeJS SDK
 
-The **NodeJS SDK** (from version 1.x.x) supports both single-user and multi-user app.
+The **NodeJS SDK** (version 2.x.x) supports both single-user and multi-user app.
 
 ### Multi-user App
 
-Multi-users functionality is achieved using Initializer's static **switchUser()** method.
+Multi-users functionality is achieved using **switchUser()** method.
 
 ```js
 //If proxy needs to be configured for the User
@@ -657,11 +709,12 @@ const HeaderMap = require("@zohocrm/nodejs-sdk/routes/header_map").HeaderMap;
 const ResponseWrapper = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/response_wrapper").ResponseWrapper;
 const ProxyBuilder = require( "@zohocrm/nodejs-sdk/routes/proxy_builder").ProxyBuilder;
 const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").MasterModel;
+const GetRecordsParam = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations").GetRecordsParam;
+const GetRecordsHeader = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations").GetRecordsHeader;
 
-class Record{
+class Record {
 
-    static async call(){
-
+    static async call() {
         /*
 		 * Create an instance of Logger Class that takes two parameters
 		 * 1 -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
@@ -669,7 +722,7 @@ class Record{
 		 */
         let logger = new LogBuilder()
         .level(Levels.INFO)
-        .filePath("/Users/user_name/Documents/nodejs_sdk_log.log")
+        .filePath("/Users/username/final-logs.txt")
         .build();
 
         /*
@@ -687,27 +740,28 @@ class Record{
 
         /*
 		 * Create a Token instance
-		 * 1 -> OAuth client id.
-		 * 2 -> OAuth client secret.
-		 * 3 -> REFRESH/GRANT token.
-		 * 4 -> token type.
-         * 5 -> OAuth redirect URL. Default value is null
+		 * clientId -> OAuth client id.
+		 * clientSecret -> OAuth client secret.
+         * refreshToken -> GRANT token.
+		 * refreshToken -> REFRESH token.
+         * redirectURL -> OAuth redirect URL. Default value is null
 		 */
         let token1 = new OAuthBuilder()
         .clientId("clientId")
         .clientSecret("clientSecret")
-        .grantToken("GRANT Token")
-        .refreshToken("REFRESH Token")
+        // .grantToken("grantToken")
+        .refreshToken("refreshToken")
         .redirectURL("redirectURL")
         .build();
 
         /*
 		 * Create an instance of TokenStore.
-		 * 1 -> DataBase host name. Default "localhost"
-		 * 2 -> DataBase name. Default "zohooauth"
-		 * 3 -> DataBase user name. Default "root"
-		 * 4 -> DataBase password. Default ""
-		 * 5 -> DataBase port number. Default "3306"
+		 * host -> DataBase host name. Default "localhost"
+		 * databaseName -> DataBase name. Default "zohooauth"
+		 * userName -> DataBase user name. Default "root"
+		 * password -> DataBase password. Default ""
+		 * portNumber -> DataBase port number. Default "3306"
+         * tableName -> DataBase table name. Default value "oauthtoken"
 		 */
         let tokenstore = new DBStore().build();
 
@@ -722,8 +776,8 @@ class Record{
 
         /*
 		 * Create an instance of FileStore that takes absolute file path as parameter
-		 */
-        let tokenstore = new FileStore("/Users/username/Documents/nodejs_sdk_tokens.txt");
+		*/
+        let tokenstore = new FileStore("/Users/username/nodejs_sdk_tokens.txt");
 
         /*
         * autoRefreshFields
@@ -740,7 +794,7 @@ class Record{
         /*
          * The path containing the absolute directory path to store user specific JSON files containing module fields information.
          */
-        let resourcePath = "/Users/user_name/Documents/nodejs-app";
+        let resourcePath = "/Users/username";
 
         /*
          * Call the static initialize method of Initializer class that takes the following arguments
@@ -787,8 +841,6 @@ class Record{
             .build();
 
         let sdkConfig2 = new SDKConfigBuilder().pickListValidation(true).autoRefreshFields(true).build();
-
-        await Initializer.switchUser(user2, environment2, token2, sdkConfig2, requestProxy);
 
         (await new InitializeBuilder())
         .user(user2)
@@ -956,13 +1008,13 @@ class Record{
     static async getRecords(){
 
         /*
-		 * Create an instance of Logger Class that takes two parameters
-		 * 1 -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
-		 * 2 -> Absolute file path, where messages need to be logged.
+		 * Create an instance of Logger Class that requires the following
+		 * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
+		 * filePath -> Absolute file path, where messages need to be logged.
 		 */
         let logger = new LogBuilder()
         .level(Levels.INFO)
-        .filePath("/Users/user_name/Documents/nodejs_sdk_log.log")
+        .filePath("/Users/user_name/nodejs_sdk_log.log")
         .build();
 
         /*
@@ -980,27 +1032,26 @@ class Record{
 
         /*
 		 * Create a Token instance
-		 * 1 -> OAuth client id.
-		 * 2 -> OAuth client secret.
-         * 3 -> REFRESH/GRANT token.
-         * 4 -> token type.
-         * 5 -> OAuth redirect URL. Default value is null
+		 * clientId -> OAuth client id.
+		 * clientSecret -> OAuth client secret.
+         * grantToken -> GRANT token.
+         * redirectURL -> OAuth redirect URL. Default value is null
 		 */
         let token1 = new OAuthBuilder()
         .clientId("clientId")
         .clientSecret("clientSecret")
         .grantToken("GRANT Token")
-        .refreshToken("REFRESH Token")
         .redirectURL("redirectURL")
         .build();
 
         /*
 		 * Create an instance of TokenStore.
-		 * 1 -> DataBase host name. Default "localhost"
-		 * 2 -> DataBase name. Default "zohooauth"
-		 * 3 -> DataBase user name. Default "root"
-		 * 4 -> DataBase password. Default ""
-		 * 5 -> DataBase port number. Default "3306"
+		 * host -> DataBase host name. Default "localhost"
+		 * databaseName -> DataBase name. Default "zohooauth"
+		 * userName -> DataBase user name. Default "root"
+		 * password -> DataBase password. Default ""
+		 * portNumber -> DataBase port number. Default "3306"
+         * tableName -> DataBase table name. Default value "oauthtoken"
 		 */
         let tokenstore = new DBStore().build();
 
@@ -1036,14 +1087,14 @@ class Record{
         let resourcePath = "/Users/user_name/Documents/nodejs-app";
 
         /*
-         * Call the static initialize method of Initializer class that takes the following arguments
-         * 1 -> UserSignature instance
-         * 2 -> Environment instance
-         * 3 -> Token instance
-         * 4 -> TokenStore instance
-         * 5 -> sdkConfig instance
-         * 6 -> resourcePath
-         * 7 -> Logger instance
+         * Set the following in InitializeBuilder
+         * user -> UserSignature instance
+         * environment -> Environment instance
+         * token -> Token instance
+         * store -> TokenStore instance
+         * SDKConfig -> sdkConfig instance
+         * resourcePath -> resourcePath
+         * logger -> Logger instance
          */
         (await new InitializeBuilder())
         .user(user1)

@@ -14,7 +14,7 @@ class RequestProxy {
      * @param {String} user A String containing the user name of the proxy server
      * @param {String} password A String containing the password of the proxy server
      */
-    constructor(host, port, user=null, password=null) {
+    constructor(host, port, user = null, password = null) {
 
         this._host = host;
 
@@ -42,9 +42,9 @@ class RequestProxy {
     }
 
     /**
-	 * This is a getter method to get the Proxy user name.
-	 * @returns {String}
-	 */
+     * This is a getter method to get the Proxy user name.
+     * @returns {String}
+     */
     getUser() {
         return this._user;
     }
@@ -59,6 +59,6 @@ class RequestProxy {
 }
 
 module.exports = {
-    MasterModel : RequestProxy,
-    RequestProxy : RequestProxy
+    MasterModel: RequestProxy,
+    RequestProxy: RequestProxy
 }

@@ -10,13 +10,13 @@ class SDKLogger {
             level: loggerInstance.level,
 
             format: winston.format.combine(
-                winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
                 winston.format.prettyPrint()
             ),
 
             transports: [
                 new winston.transports.File({
-                    filename:loggerInstance.filePath
+                    filename: loggerInstance.filePath
                 })
             ]
         });
@@ -31,6 +31,6 @@ class SDKLogger {
 }
 
 module.exports = {
-    MasterModel : SDKLogger,
+    MasterModel: SDKLogger,
     SDKLogger: SDKLogger
 };

@@ -5,7 +5,7 @@ const Constants = require("../utils/util/constants").Constants;
 /**
  * This class represents the HTTP parameter name and value.
  */
-class ParameterMap{
+class ParameterMap {
 
 	parameterMap = new Map();
 
@@ -13,7 +13,7 @@ class ParameterMap{
 	 * This is a getter method to get parameter map.
 	 * @returns {Map} A Map representing the API request parameters.
 	 */
-    getParameterMap(){
+	getParameterMap() {
 		return this.parameterMap;
 	}
 
@@ -23,45 +23,47 @@ class ParameterMap{
 	 * @param {object} value - An object containing the parameter value.
 	 * @throws {SDKException}
 	 */
-	async add(param, value){
+	async add(param, value) {
 
-		if(param == null) {
+		if (param == null) {
 			throw new SDKException(Constants.PARAMETER_NULL_ERROR, Constants.PARAM_INSTANCE_NULL_ERROR);
 		}
 
-		var paramName = param.name();
+		var paramName = param.getName();
 
-		if(paramName == null) {
+		if (paramName == null) {
 			throw new SDKException(Constants.PARAM_NAME_NULL_ERROR, Constants.PARAM_NAME_NULL_ERROR_MESSAGE);
 		}
 
-		if(value == null) {
+		if (value == null) {
 			throw new SDKException(Constants.PARAMETER_NULL_ERROR, paramName + Constants.NULL_VALUE_ERROR_MESSAGE);
 		}
 
-		var paramClassName = param.className();
+		var paramClassName = param.getClassName();
 
-		if(paramClassName != null) {
+		var parsedParamValue = null;
+
+		if (paramClassName != null) {
 			let headerParamValidator = new HeaderParamValidator();
 
-			value = await headerParamValidator.validate(param, value);
+			parsedParamValue = await headerParamValidator.validate(param, value);
 		}
 
-		if(this.parameterMap.has(paramName) && this.parameterMap.get(paramName)!= null) {
+		if (this.parameterMap.has(paramName) && this.parameterMap.get(paramName) != null) {
 			let paramValue = this.parameterMap.get(paramName)
 
-			paramValue = paramValue.concat(",", value.toString());
+			paramValue = paramValue.concat(",", parsedParamValue.toString());
 
 			this.parameterMap.set(paramName, paramValue);
 
 		}
 		else {
-			this.parameterMap.set(paramName, value.toString());
+			this.parameterMap.set(paramName, parsedParamValue.toString());
 		}
-    }
+	}
 }
 
 module.exports = {
-	MasterModel : ParameterMap,
-	ParameterMap : ParameterMap
+	MasterModel: ParameterMap,
+	ParameterMap: ParameterMap
 }

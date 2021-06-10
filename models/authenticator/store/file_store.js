@@ -22,32 +22,32 @@ class FileStore extends TokenStore {
 
         this.headers = [Constants.ID, Constants.USER_MAIL, Constants.CLIENT_ID, Constants.CLIENT_SECRET, Constants.REFRESH_TOKEN, Constants.ACCESS_TOKEN, Constants.GRANT_TOKEN, Constants.EXPIRY_TIME, Constants.REDIRECT_URL];
 
-        if(!fs.existsSync(this.filePath) || (fs.existsSync(this.filePath) && fs.readFileSync(this.filePath, 'utf-8') === "")) {
+        if (!fs.existsSync(this.filePath) || (fs.existsSync(this.filePath) && fs.readFileSync(this.filePath, 'utf-8') === "")) {
             fs.writeFileSync(filePath, this.headers.join(), 'utf-8');
         }
     }
 
     getToken(user, token) {
         try {
-            var csvReader = fs.readFileSync(this.filePath,'utf-8').toString().split("\n");
+            var csvReader = fs.readFileSync(this.filePath, 'utf-8').toString().split("\n");
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
-                for(var i = 0; i < csvReader.length; i++) {
+                for (var i = 0; i < csvReader.length; i++) {
                     var allContents = csvReader[i];
 
                     var nextRecord = allContents.split(",");
 
-                    if(this.checkTokenExists(user.email(), token, nextRecord)) {
-                        token.accessToken(nextRecord[5]);
+                    if (this.checkTokenExists(user.getEmail(), token, nextRecord)) {
+                        token.setAccessToken(nextRecord[5]);
 
-                        token.expiresIn(nextRecord[7]);
+                        token.setExpiresIn(nextRecord[7]);
 
-                        token.refreshToken(nextRecord[4]);
+                        token.setRefreshToken(nextRecord[4]);
 
-                        token.id(nextRecord[0]);
+                        token.setId(nextRecord[0]);
 
-                        token.userMail(nextRecord[1]);
+                        token.setUserMail(nextRecord[1]);
 
                         return token;
                     }
@@ -63,25 +63,31 @@ class FileStore extends TokenStore {
 
     saveToken(user, token) {
         try {
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
-                token.userMail(user.email());
+                token.setUserMail(user.getEmail());
 
                 this.deleteToken(token);
 
                 var data = [];
 
-                data[0] = user.email();
+                data[0] = token.getId();
 
-                data[1] = token.clientId();
+                data[1] = user.getEmail();
 
-                data[2] = token.refreshToken();
+                data[2] = token.getClientId();
 
-                data[3] = token.accessToken();
+                data[3] = token.getClientSecret();
 
-                data[4] = token.grantToken();
+                data[4] = token.getRefreshToken();
 
-                data[5] = token.expiresIn();
+                data[5] = token.getAccessToken();
+
+                data[6] = token.getGrantToken();
+
+                data[7] = token.getExpiresIn();
+
+                data[8] = token.getRedirectURL();
 
                 fs.appendFileSync(this.filePath, "\n" + data.join());
             }
@@ -95,17 +101,17 @@ class FileStore extends TokenStore {
         try {
             var array = "";
 
-            array = fs.readFileSync(this.filePath,'utf-8').toString().split("\n");
+            array = fs.readFileSync(this.filePath, 'utf-8').toString().split("\n");
 
             let deleted = false;
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
                 for (var i = 0; i < array.length; i++) {
                     var nextRecord = array[i].toString().split(",");
 
-                    if(this.checkTokenExists(token.userMail(), token, nextRecord)) {
-                        array.splice(i,1);
+                    if (this.checkTokenExists(token.getUserMail(), token, nextRecord)) {
+                        array.splice(i, 1);
 
                         deleted = true;
 
@@ -114,7 +120,7 @@ class FileStore extends TokenStore {
                 }
 
                 // Rewrite the file if we deleted the user account details.
-                if(deleted) {
+                if (deleted) {
                     fs.writeFileSync(this.filePath, array.join("\n"), 'utf8');
                 }
             }
@@ -128,32 +134,30 @@ class FileStore extends TokenStore {
         try {
             var tokens = [];
 
-            var csvReader = fs.readFileSync(this.filePath,'utf-8').toString().split("\n");
+            var csvReader = fs.readFileSync(this.filePath, 'utf-8').toString().split("\n");
 
-            for(var i = 1; i < csvReader.length; i++){
+            for (var i = 1; i < csvReader.length; i++) {
                 let allContents = csvReader[i];
 
                 let nextRecord = allContents.split(",");
 
                 let grantToken = (nextRecord[6] != null && nextRecord[6].length > 0) ? nextRecord[6] : null;
 
-                let token = new OAuthBuilder().clientId(nextRecord[2]).clientSecret(nextRecord[3]).build();
+                let token = new OAuthBuilder().clientId(nextRecord[2]).clientSecret(nextRecord[3]).refreshToken(nextRecord[4]).build();
 
-                token.id(nextRecord[0]);
+                token.setId(nextRecord[0]);
 
-                if(grantToken != null) {
-                    token.grantToken(grantToken);
+                if (grantToken != null) {
+                    token.setGrantToken(grantToken);
                 }
 
-                token.userMail(nextRecord[1]);
+                token.setUserMail(nextRecord[1]);
 
-                token.refreshToken(nextRecord[4]);
+                token.setAccessToken(nextRecord[5]);
 
-                token.accessToken(nextRecord[5]);
+                token.setExpiresIn(nextRecord[7]);
 
-                token.expiresIn(nextRecord[7]);
-
-                token.redirectURL(nextRecord[8]);
+                token.setRedirectURL(nextRecord[8]);
 
                 tokens.push(token);
             }
@@ -176,19 +180,19 @@ class FileStore extends TokenStore {
     }
 
     checkTokenExists(email, token, row) {
-        if(email == null){
+        if (email == null) {
             throw new SDKException(Constants.USER_MAIL_NULL_ERROR, Constants.USER_MAIL_NULL_ERROR_MESSAGE);
         }
 
-        var clientId = token.clientId();
+        var clientId = token.getClientId();
 
-        var grantToken = token.grantToken();
+        var grantToken = token.getGrantToken();
 
-        var refreshToken = token.refreshToken();
+        var refreshToken = token.getRefreshToken();
 
         var tokenCheck = grantToken != null ? grantToken === row[6] : refreshToken === row[4];
 
-        if(row[1] === email && row[2] === clientId && tokenCheck) {
+        if (row[1] === email && row[2] === clientId && tokenCheck) {
             return true;
         }
 
@@ -197,48 +201,51 @@ class FileStore extends TokenStore {
 
     getTokenById(id, token) {
         try {
-            var csvReader = fs.readFileSync(this.filePath,'utf-8').toString().split("\n");
+            var csvReader = fs.readFileSync(this.filePath, 'utf-8').toString().split("\n");
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
                 let isRowPresent = false;
 
-                for(var i = 0; i < csvReader.length; i++) {
+                for (var i = 0; i < csvReader.length; i++) {
                     var allContents = csvReader[i];
 
                     var nextRecord = allContents.split(",");
 
-                    if(nextRecord[0] == id) {
+                    if (nextRecord[0] == id) {
                         isRowPresent = true;
 
-                        let grantToken = (nextRecord[6] != null && nextRecord[6].length > 0)? nextRecord[6] : null;
+                        let grantToken = (nextRecord[6] != null && nextRecord[6].length > 0) ? nextRecord[6] : null;
 
-						let redirectURL = (nextRecord[8] != null && nextRecord[8].length > 0)? nextRecord[8] : null;
+                        let redirectURL = (nextRecord[8] != null && nextRecord[8].length > 0) ? nextRecord[8] : null;
 
-                        let oauthToken = new OAuthBuilder().clientId(nextRecord[2]).clientSecret(nextRecord[3]).refreshToken(nextRecord[4]).build();
+                        token.setClientId(nextRecord[2]);
 
-                        oauthToken.id(id);
+                        token.setClientSecret(nextRecord[3]);
 
-                        if(grantToken != null) {
-                            oauthToken.grantToken(grantToken);
+                        token.setRefreshToken(nextRecord[4]);
+
+                        token.setId(id);
+
+                        if (grantToken != null) {
+                            token.setGrantToken(grantToken);
                         }
 
-                        oauthToken.userMail(nextRecord[1]);
+                        token.setUserMail(nextRecord[1]);
 
-                        oauthToken.accessToken(nextRecord[5]);
+                        token.setAccessToken(nextRecord[5]);
 
-                        oauthToken.expiresIn(nextRecord[7]);
+                        token.setExpiresIn(nextRecord[7]);
 
-                        oauthToken.redirectURL(redirectURL);
-
+                        token.setRedirectURL(redirectURL);
 
                         return oauthToken;
                     }
                 }
 
-                if(!isRowPresent) {
-					throw new SDKException(Constants.TOKEN_STORE, Constants.GET_TOKEN_BY_ID_FILE_ERROR);
-				}
+                if (!isRowPresent) {
+                    throw new SDKException(Constants.TOKEN_STORE, Constants.GET_TOKEN_BY_ID_FILE_ERROR);
+                }
             }
         }
         catch (error) {
@@ -250,6 +257,6 @@ class FileStore extends TokenStore {
 }
 
 module.exports = {
-    MasterModel : FileStore,
-    FileStore : FileStore
+    MasterModel: FileStore,
+    FileStore: FileStore
 }

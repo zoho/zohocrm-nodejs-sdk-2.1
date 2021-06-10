@@ -14,6 +14,6 @@ class Choice {
 }
 
 module.exports = {
-    MasterModel : Choice,
-    Choice : Choice
+    MasterModel: Choice,
+    Choice: Choice
 }

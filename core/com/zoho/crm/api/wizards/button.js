@@ -12,6 +12,8 @@ class Button{
 	color;
 	shape;
 	backgroundColor;
+	visibility;
+	transition;
 	keyModified = new Map();
 	/**
 	 * The method to get the id
@@ -210,6 +212,51 @@ class Button{
 		}
 		this.backgroundColor = backgroundColor;
 		this.keyModified.set("background_color", 1);
+
+	}
+
+	/**
+	 * The method to get the visibility
+	 * @returns {String} A String representing the visibility
+	 */
+	getVisibility()	{
+		return this.visibility;
+
+	}
+
+	/**
+	 * The method to set the value to visibility
+	 * @param {String} visibility A String representing the visibility
+	 */
+	setVisibility(visibility)	{
+		if((visibility != null) && (!(Object.prototype.toString.call(visibility) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: visibility EXPECTED TYPE: String", null, null);
+		}
+		this.visibility = visibility;
+		this.keyModified.set("visibility", 1);
+
+	}
+
+	/**
+	 * The method to get the transition
+	 * @returns {Transition} An instance of Transition
+	 */
+	getTransition()	{
+		return this.transition;
+
+	}
+
+	/**
+	 * The method to set the value to transition
+	 * @param {Transition} transition An instance of Transition
+	 */
+	setTransition(transition)	{
+		const Transition = require("./transition").MasterModel;
+		if((transition != null) && (!(transition instanceof Transition)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: transition EXPECTED TYPE: Transition", null, null);
+		}
+		this.transition = transition;
+		this.keyModified.set("transition", 1);
 
 	}
 

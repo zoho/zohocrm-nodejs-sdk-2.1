@@ -1,54 +1,54 @@
 const Constants = require("../../../../../../utils/util/constants").MasterModel;
 const SDKException = require("../exception/sdk_exception").MasterModel;
 
-class Category{
+class MultiModuleLookup{
 
-	displayLabel;
-	permissionsDetails;
-	name;
 	module;
+	id;
+	name;
 	keyModified = new Map();
 	/**
-	 * The method to get the displayLabel
-	 * @returns {String} A String representing the displayLabel
+	 * The method to get the module
+	 * @returns {Module} An instance of Module
 	 */
-	getDisplayLabel()	{
-		return this.displayLabel;
+	getModule()	{
+		return this.module;
 
 	}
 
 	/**
-	 * The method to set the value to displayLabel
-	 * @param {String} displayLabel A String representing the displayLabel
+	 * The method to set the value to module
+	 * @param {Module} module An instance of Module
 	 */
-	setDisplayLabel(displayLabel)	{
-		if((displayLabel != null) && (!(Object.prototype.toString.call(displayLabel) == "[object String]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: displayLabel EXPECTED TYPE: String", null, null);
+	setModule(module)	{
+		const Module = require("./module").MasterModel;
+		if((module != null) && (!(module instanceof Module)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: module EXPECTED TYPE: Module", null, null);
 		}
-		this.displayLabel = displayLabel;
-		this.keyModified.set("display_label", 1);
+		this.module = module;
+		this.keyModified.set("module", 1);
 
 	}
 
 	/**
-	 * The method to get the permissionsDetails
-	 * @returns {Array} An Array representing the permissionsDetails
+	 * The method to get the id
+	 * @returns {BigInt} A BigInt representing the id
 	 */
-	getPermissionsDetails()	{
-		return this.permissionsDetails;
+	getId()	{
+		return this.id;
 
 	}
 
 	/**
-	 * The method to set the value to permissionsDetails
-	 * @param {Array} permissionsDetails An Array representing the permissionsDetails
+	 * The method to set the value to id
+	 * @param {BigInt} id A BigInt representing the id
 	 */
-	setPermissionsDetails(permissionsDetails)	{
-		if((permissionsDetails != null) && (!(Object.prototype.toString.call(permissionsDetails) == "[object Array]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: permissionsDetails EXPECTED TYPE: Array", null, null);
+	setId(id)	{
+		if((id != null) && (!(Object.prototype.toString.call(id) == "[object BigInt]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: id EXPECTED TYPE: BigInt", null, null);
 		}
-		this.permissionsDetails = permissionsDetails;
-		this.keyModified.set("permissions_details", 1);
+		this.id = id;
+		this.keyModified.set("id", 1);
 
 	}
 
@@ -71,28 +71,6 @@ class Category{
 		}
 		this.name = name;
 		this.keyModified.set("name", 1);
-
-	}
-
-	/**
-	 * The method to get the module
-	 * @returns {String} A String representing the module
-	 */
-	getModule()	{
-		return this.module;
-
-	}
-
-	/**
-	 * The method to set the value to module
-	 * @param {String} module A String representing the module
-	 */
-	setModule(module)	{
-		if((module != null) && (!(Object.prototype.toString.call(module) == "[object String]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: module EXPECTED TYPE: String", null, null);
-		}
-		this.module = module;
-		this.keyModified.set("module", 1);
 
 	}
 
@@ -130,6 +108,6 @@ class Category{
 
 }
 module.exports = {
-	MasterModel : Category,
-	Category : Category
+	MasterModel : MultiModuleLookup,
+	MultiModuleLookup : MultiModuleLookup
 }

@@ -63,6 +63,6 @@ class Environment {
 }
 
 module.exports = {
-    MasterModel : Environment,
-    Environment : Environment
+    MasterModel: Environment,
+    Environment: Environment
 }

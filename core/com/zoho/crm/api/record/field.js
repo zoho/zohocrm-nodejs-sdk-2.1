@@ -230,6 +230,7 @@ class Field{
 		static TEAM = new Field("Team");
 		static ID = new Field("id");
 		static CARRIER = new Field("Carrier");
+		static QUOTED_ITEMS = new Field("Quoted_Items");
 		static QUOTE_STAGE = new Field("Quote_Stage");
 		static GRAND_TOTAL = new Field("Grand_Total");
 		static MODIFIED_TIME = new Field("Modified_Time");
@@ -239,7 +240,6 @@ class Field{
 		static TERMS_AND_CONDITIONS = new Field("Terms_and_Conditions");
 		static SUB_TOTAL = new Field("Sub_Total");
 		static BILLING_CODE = new Field("Billing_Code");
-		static PRODUCT_DETAILS = new Field("Product_Details");
 		static SUBJECT = new Field("Subject");
 		static CONTACT_NAME = new Field("Contact_Name");
 		static SHIPPING_CITY = new Field("Shipping_City");
@@ -261,6 +261,7 @@ class Field{
 		static TAX = new Field("Tax");
 		static INVOICE_DATE = new Field("Invoice_Date");
 		static MODIFIED_BY = new Field("Modified_By");
+		static INVOICED_ITEMS = new Field("Invoiced_Items");
 		static BILLING_COUNTRY = new Field("Billing_Country");
 		static ACCOUNT_NAME = new Field("Account_Name");
 		static ID = new Field("id");
@@ -277,7 +278,6 @@ class Field{
 		static SUB_TOTAL = new Field("Sub_Total");
 		static INVOICE_NUMBER = new Field("Invoice_Number");
 		static BILLING_CODE = new Field("Billing_Code");
-		static PRODUCT_DETAILS = new Field("Product_Details");
 		static SUBJECT = new Field("Subject");
 		static CONTACT_NAME = new Field("Contact_Name");
 		static EXCISE_DUTY = new Field("Excise_Duty");
@@ -332,6 +332,7 @@ class Field{
 		static ACCOUNT_NAME = new Field("Account_Name");
 		static ID = new Field("id");
 		static CARRIER = new Field("Carrier");
+		static ORDERED_ITEMS = new Field("Ordered_Items");
 		static QUOTE_NAME = new Field("Quote_Name");
 		static STATUS = new Field("Status");
 		static SALES_COMMISSION = new Field("Sales_Commission");
@@ -344,7 +345,6 @@ class Field{
 		static TERMS_AND_CONDITIONS = new Field("Terms_and_Conditions");
 		static SUB_TOTAL = new Field("Sub_Total");
 		static BILLING_CODE = new Field("Billing_Code");
-		static PRODUCT_DETAILS = new Field("Product_Details");
 		static SUBJECT = new Field("Subject");
 		static CONTACT_NAME = new Field("Contact_Name");
 		static EXCISE_DUTY = new Field("Excise_Duty");
@@ -473,6 +473,7 @@ class Field{
 		static PO_DATE = new Field("PO_Date");
 		static MODIFIED_BY = new Field("Modified_By");
 		static BILLING_COUNTRY = new Field("Billing_Country");
+		static PURCHASE_ITEMS = new Field("Purchase_Items");
 		static ID = new Field("id");
 		static CARRIER = new Field("Carrier");
 		static STATUS = new Field("Status");
@@ -487,7 +488,6 @@ class Field{
 		static TERMS_AND_CONDITIONS = new Field("Terms_and_Conditions");
 		static SUB_TOTAL = new Field("Sub_Total");
 		static BILLING_CODE = new Field("Billing_Code");
-		static PRODUCT_DETAILS = new Field("Product_Details");
 		static SUBJECT = new Field("Subject");
 		static TRACKING_NUMBER = new Field("Tracking_Number");
 		static CONTACT_NAME = new Field("Contact_Name");

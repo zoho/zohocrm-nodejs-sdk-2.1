@@ -20,19 +20,18 @@ class StreamWrapper {
      * @param {object} stream - A InputStream containing the file stream.
      * @param {string} filePath - A String containing the absolute file path.
      */
-    constructor(name=null , stream=null , filePath=null) {
-        if(filePath == null) {
+    constructor(name = null, stream = null, filePath = null) {
+        if (filePath == null) {
             this.name = name;
 
             this.stream = stream;
         }
         else {
-
-            if(!fs.existsSync(filePath)) {
+            if (!fs.existsSync(filePath)) {
                 throw new SDKException(Constants.FILE_ERROR, Constants.FILE_DOES_NOT_EXISTS);
             }
 
-            this.file=filePath;
+            this.file = filePath;
 
             this.name = path.basename(filePath);
 
@@ -58,6 +57,6 @@ class StreamWrapper {
 }
 
 module.exports = {
-    MasterModel :  StreamWrapper,
-    StreamWrapper : StreamWrapper
+    MasterModel: StreamWrapper,
+    StreamWrapper: StreamWrapper
 }

@@ -49,7 +49,8 @@ class ProxyBuilder {
         return new RequestProxy(this._host, this._port, this._user, this._password);
     }
 }
+
 module.exports = {
-    MasterModel : ProxyBuilder,
-    ProxyBuilder : ProxyBuilder
+    MasterModel: ProxyBuilder,
+    ProxyBuilder: ProxyBuilder
 }

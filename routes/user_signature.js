@@ -5,7 +5,7 @@ const SDKException = require("../core/com/zoho/crm/api/exception/sdk_exception")
 /**
  * This class represents the Zoho CRM User.
  */
-class UserSignature{
+class UserSignature {
 
 	_email;
 
@@ -15,12 +15,12 @@ class UserSignature{
 	 */
 	constructor(email) {
 
-		if(!Constants.REGULAR_EXPRESSION.test(email)){
-            let error = {};
+		if (!Constants.REGULAR_EXPRESSION.test(email)) {
+			let error = {};
 
 			error[Constants.ERROR_HASH_FIELD] = Constants.EMAIL;
 
-			error[Constants.ACCEPTED_TYPE] = Constants.EMAIL;
+			error[Constants.ERROR_HASH_EXPECTED_TYPE] = Constants.EMAIL;
 
 			let ex = new SDKException(Constants.USER_SIGNATURE_ERROR, null, error);
 
@@ -34,12 +34,12 @@ class UserSignature{
 	 * This is a getter method to get user email.
 	 * @returns {string} A String representing the CRM user email.
 	 */
-    getEmail() {
+	getEmail() {
 		return this._email;
 	}
 }
 
 module.exports = {
-    MasterModel : UserSignature,
-    UserSignature: UserSignature
+	MasterModel: UserSignature,
+	UserSignature: UserSignature
 };

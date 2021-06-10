@@ -5,7 +5,7 @@ const Constants = require("../utils/util/constants").Constants;
 /**
  * This class represents the HTTP header name and value.
  */
-class HeaderMap{
+class HeaderMap {
 	headerMap = new Map();
 
 	/**
@@ -24,42 +24,44 @@ class HeaderMap{
 	 */
 	async add(header, value) {
 
-		if(header == null) {
+		if (header == null) {
 			throw new SDKException(Constants.HEADER_NULL_ERROR, Constants.HEADER_INSTANCE_NULL_ERROR);
 		}
-		var headerName = header.name();
+		var headerName = header.getName();
 
-		if(headerName == null) {
+		if (headerName == null) {
 			throw new SDKException(Constants.HEADER_NAME_NULL_ERROR, Constants.HEADER_NAME_NULL_ERROR_MESSAGE);
 		}
 
-		if(value == null) {
+		if (value == null) {
 			throw new SDKException(Constants.HEADER_NULL_ERROR, headerName + Constants.NULL_VALUE_ERROR_MESSAGE);
 		}
 
-		var headerClassName = header.className();
+		var headerClassName = header.getClassName();
 
-		if(headerClassName != null) {
+		var parsedHeaderValue = null;
+
+		if (headerClassName != null) {
 			let headerParamValidator = new HeaderParamValidator();
 
-			value = await headerParamValidator.validate(header, value);
+			parsedHeaderValue = await headerParamValidator.validate(header, value);
 		}
 
-		if(this.headerMap.has(headerName) && this.headerMap.get(headerName) != null) {
+		if (this.headerMap.has(headerName) && this.headerMap.get(headerName) != null) {
 			let headerValue = this.headerMap.get(headerName);
 
-			headerValue = headerValue.concat(",", value.toString());
+			headerValue = headerValue.concat(",", parsedHeaderValue.toString());
 
 			this.headerMap.set(headerName, headerValue);
 
 		}
 		else {
-			this.headerMap.set(headerName, value.toString());
+			this.headerMap.set(headerName, parsedHeaderValue.toString());
 		}
 	}
 }
 
 module.exports = {
-	MasterModel : HeaderMap,
-	HeaderMap : HeaderMap
+	MasterModel: HeaderMap,
+	HeaderMap: HeaderMap
 }

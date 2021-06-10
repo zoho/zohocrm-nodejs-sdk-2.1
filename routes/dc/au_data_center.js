@@ -4,11 +4,11 @@ const DataCenter = require("./data_center").DataCenter;
  * This class represents the properties of Zoho CRM in AU Domain.
  * @extends DataCenter
  */
-class AUDataCenter extends DataCenter{
+class AUDataCenter extends DataCenter {
 
-	static _PRODUCTION;
+    static _PRODUCTION;
 
-	static _SANDBOX;
+    static _SANDBOX;
 
     static _DEVELOPER;
 
@@ -18,49 +18,49 @@ class AUDataCenter extends DataCenter{
      * This method represents the Zoho CRM Production environment in AU domain
      * @returns {Environment} An instance of Environment
      */
-	static PRODUCTION(){
+    static PRODUCTION() {
 
-        if(AUDataCenter._PRODUCTION  == null){
-            AUDataCenter._PRODUCTION = DataCenter.setEnvironment("https://www.zohoapis.com.au", AUDataCenter.AU.getIAMUrl(), AUDataCenter.AU.getFileUploadUrl(), "au_prd");
+        if (this._PRODUCTION == null) {
+            this._PRODUCTION = DataCenter.setEnvironment("https://www.zohoapis.com.au", this.AU.getIAMUrl(), this.AU.getFileUploadUrl(), "au_prd");
         }
 
-        return AUDataCenter._PRODUCTION;
+        return this._PRODUCTION;
     }
 
     /**
      * This method represents the Zoho CRM Sandbox environment in AU domain
      * @returns {Environment} An instance of Environment
      */
-    static SANDBOX(){
-        if(AUDataCenter._SANDBOX == null){
-            AUDataCenter._SANDBOX = DataCenter.setEnvironment("https://sandbox.zohoapis.com.au", AUDataCenter.AU.getIAMUrl(), AUDataCenter.AU.getFileUploadUrl(), "au_sdb");
+    static SANDBOX() {
+        if (this._SANDBOX == null) {
+            this._SANDBOX = DataCenter.setEnvironment("https://sandbox.zohoapis.com.au", this.AU.getIAMUrl(), this.AU.getFileUploadUrl(), "au_sdb");
         }
 
-        return AUDataCenter._SANDBOX;
+        return this._SANDBOX;
     }
 
     /**
      * This method represents the Zoho CRM Developer environment in AU domain
      * @returns {Environment} An instance of Environment
      */
-    static DEVELOPER(){
-        if(AUDataCenter._DEVELOPER == null){
-            AUDataCenter._DEVELOPER = DataCenter.setEnvironment("https://developer.zohoapis.com.au", AUDataCenter.AU.getIAMUrl(), AUDataCenter.AU.getFileUploadUrl(), "au_dev");
+    static DEVELOPER() {
+        if (this._DEVELOPER == null) {
+            this._DEVELOPER = DataCenter.setEnvironment("https://developer.zohoapis.com.au", this.AU.getIAMUrl(), this.AU.getFileUploadUrl(), "au_dev");
         }
 
-        return AUDataCenter._DEVELOPER;
+        return this._DEVELOPER;
     }
 
-    getIAMUrl(){
-		return "https://accounts.zoho.com.au/oauth/v2/token";
+    getIAMUrl() {
+        return "https://accounts.zoho.com.au/oauth/v2/token";
     }
 
-    getFileUploadUrl(){
+    getFileUploadUrl() {
         return "https://content.zohoapis.com.au"
     }
 }
 
 module.exports = {
-    MasterModel : AUDataCenter,
-    AUDataCenter : AUDataCenter
+    MasterModel: AUDataCenter,
+    AUDataCenter: AUDataCenter
 }

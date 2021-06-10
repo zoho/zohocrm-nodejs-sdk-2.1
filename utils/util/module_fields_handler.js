@@ -11,11 +11,10 @@ const Utility = require("./utility").Utility;
  * The class contains methods to manipulate the module fields only when autoRefreshFields is set to false in Initializer.
  */
 class ModuleFieldsHandler {
-
     /**
-	 * The method to obtain resources directory path.
-	 * @returns {String} A String representing the directory's absolute path.
-	 */
+     * The method to obtain resources directory path.
+     * @returns {String} A String representing the directory's absolute path.
+     */
     static async getDirectory() {
         let initializer = await Initializer.getInitializer();
 
@@ -30,7 +29,7 @@ class ModuleFieldsHandler {
         try {
             let recordFieldDetailsPath = path.join(await ModuleFieldsHandler.getDirectory(), await new Converter().getEncodedFileName());
 
-            if(fs.existsSync(recordFieldDetailsPath)) {
+            if (fs.existsSync(recordFieldDetailsPath)) {
                 fs.unlinkSync(recordFieldDetailsPath);
             }
         } catch (error) {
@@ -50,7 +49,7 @@ class ModuleFieldsHandler {
         try {
             let dir = await ModuleFieldsHandler.getDirectory();
 
-            fs.readdirSync(dir).forEach(fileName =>{
+            fs.readdirSync(dir).forEach(fileName => {
                 let filepath = path.resolve(dir, fileName);
 
                 fs.unlinkSync(filepath);
@@ -75,12 +74,10 @@ class ModuleFieldsHandler {
 
             let recordFieldDetailsPath = path.join(initializer.resourcePath, Constants.FIELD_DETAILS_DIRECTORY, await new Converter().getEncodedFileName());
 
-            if(fs.existsSync(recordFieldDetailsPath)) {
-
+            if (fs.existsSync(recordFieldDetailsPath)) {
                 let recordFieldDetailsJson = await Initializer.getJSON(recordFieldDetailsPath);
 
-                if(recordFieldDetailsJson.hasOwnProperty(module.toLowerCase())) {
-
+                if (recordFieldDetailsJson.hasOwnProperty(module.toLowerCase())) {
                     await Utility.deleteFields(recordFieldDetailsJson, module);
 
                     fs.writeFileSync(recordFieldDetailsPath, JSON.stringify(recordFieldDetailsJson));
@@ -105,7 +102,7 @@ class ModuleFieldsHandler {
             await Utility.getFields(module);
 
         } catch (error) {
-            if(!(error instanceof SDKException)) {
+            if (!(error instanceof SDKException)) {
                 error = new SDKException(null, null, null, error);
             }
 
@@ -123,7 +120,7 @@ class ModuleFieldsHandler {
         try {
             await Utility.refreshModules();
         } catch (error) {
-            if(!(error instanceof SDKException)) {
+            if (!(error instanceof SDKException)) {
                 error = new SDKException(null, null, null, error);
             }
 
@@ -135,6 +132,6 @@ class ModuleFieldsHandler {
 }
 
 module.exports = {
-    MasterModel : ModuleFieldsHandler,
-    ModuleFieldsHandler : ModuleFieldsHandler
+    MasterModel: ModuleFieldsHandler,
+    ModuleFieldsHandler: ModuleFieldsHandler
 }

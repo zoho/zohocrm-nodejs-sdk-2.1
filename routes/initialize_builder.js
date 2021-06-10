@@ -47,16 +47,14 @@ class InitializeBuilder {
 
             this.errorMessage = (await this.initializer != null) ? Constants.SWITCH_USER_ERROR : Constants.INITIALIZATION_ERROR;
 
-            if(this.initializer != null) {
-                this._user = this.initializer.getUser();
+            if (this.initializer != null) {
+                this._user = await this.initializer.getUser();
 
                 this._environment = await this.initializer.getEnvironment();
 
                 this._token = await this.initializer.getToken();
 
                 this._sdkConfig = await this.initializer.getSDKConfig();
-
-                this._requestProxy = await this.initializer.getRequestProxy();
             }
             return this;
         })();
@@ -75,7 +73,7 @@ class InitializeBuilder {
 
         Utility.assertNotNull(this._resourcePath, this.errorMessage, Constants.RESOURCE_PATH_ERROR_MESSAGE);
 
-        if(this._logger == null) {
+        if (this._logger == null) {
             this._logger = loggerFile.Logger.getInstance(loggerFile.Levels.INFO, path.join(__dirname, "..", Constants.LOGFILE_NAME));
         }
 
@@ -97,7 +95,7 @@ class InitializeBuilder {
     token(token) {
         Utility.assertNotNull(token, this.errorMessage, Constants.TOKEN_ERROR_MESSAGE);
 
-        if(!(token instanceof Token)) {
+        if (!(token instanceof Token)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.TOKEN;
@@ -115,7 +113,7 @@ class InitializeBuilder {
     SDKConfig(sdkConfig) {
         Utility.assertNotNull(sdkConfig, this.errorMessage, Constants.SDK_CONFIG_ERROR_MESSAGE);
 
-        if(!(sdkConfig instanceof SDKConfig)) {
+        if (!(sdkConfig instanceof SDKConfig)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.SDK_CONFIG;
@@ -137,7 +135,7 @@ class InitializeBuilder {
     }
 
     resourcePath(resourcePath) {
-        if(resourcePath == null || resourcePath.length <= 0) {
+        if (resourcePath == null || resourcePath.length <= 0) {
             throw new SDKException(this.errorMessage, Constants.RESOURCE_PATH_ERROR_MESSAGE);
         }
 
@@ -153,7 +151,7 @@ class InitializeBuilder {
     user(user) {
         Utility.assertNotNull(user, this.errorMessage, Constants.USERSIGNATURE_ERROR_MESSAGE);
 
-        if(!(user instanceof UserSignature)) {
+        if (!(user instanceof UserSignature)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.USER;
@@ -171,7 +169,7 @@ class InitializeBuilder {
     store(store) {
         Utility.assertNotNull(store, this.errorMessage, Constants.STORE_ERROR_MESSAGE);
 
-        if(!(store instanceof TokenStore)) {
+        if (!(store instanceof TokenStore)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.STORE;
@@ -189,12 +187,12 @@ class InitializeBuilder {
     environment(environment) {
         Utility.assertNotNull(environment, this.errorMessage, Constants.ENVIRONMENT_ERROR_MESSAGE);
 
-        if(!(environment instanceof Environment)) {
+        if (!(environment instanceof Environment)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.ENVIRONMENT;
 
-            error[Constants.EXPECTED_TYPE] = Environment.name;
+            error[Constants.ERROR_HASH_EXPECTED_TYPE] = Environment.name;
 
             throw new SDKException(Constants.INITIALIZATION_ERROR, Constants.INITIALIZATION_EXCEPTION, error);
         }
@@ -206,6 +204,6 @@ class InitializeBuilder {
 }
 
 module.exports = {
-    MasterModel : InitializeBuilder,
-    InitializeBuilder : InitializeBuilder
+    MasterModel: InitializeBuilder,
+    InitializeBuilder: InitializeBuilder
 }

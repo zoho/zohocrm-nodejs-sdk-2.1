@@ -10,10 +10,12 @@ class Attachment{
 	size;
 	parentId;
 	editable;
+	sharingPermission;
 	fileId;
 	type;
 	seModule;
 	modifiedBy;
+	attachmentType;
 	state;
 	id;
 	createdBy;
@@ -178,6 +180,28 @@ class Attachment{
 	}
 
 	/**
+	 * The method to get the sharingPermission
+	 * @returns {String} A String representing the sharingPermission
+	 */
+	getSharingPermission()	{
+		return this.sharingPermission;
+
+	}
+
+	/**
+	 * The method to set the value to sharingPermission
+	 * @param {String} sharingPermission A String representing the sharingPermission
+	 */
+	setSharingPermission(sharingPermission)	{
+		if((sharingPermission != null) && (!(Object.prototype.toString.call(sharingPermission) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: sharingPermission EXPECTED TYPE: String", null, null);
+		}
+		this.sharingPermission = sharingPermission;
+		this.keyModified.set("$sharing_permission", 1);
+
+	}
+
+	/**
 	 * The method to get the fileId
 	 * @returns {String} A String representing the fileId
 	 */
@@ -263,6 +287,28 @@ class Attachment{
 		}
 		this.modifiedBy = modifiedBy;
 		this.keyModified.set("Modified_By", 1);
+
+	}
+
+	/**
+	 * The method to get the attachmentType
+	 * @returns {number} A number representing the attachmentType
+	 */
+	getAttachmentType()	{
+		return this.attachmentType;
+
+	}
+
+	/**
+	 * The method to set the value to attachmentType
+	 * @param {number} attachmentType A number representing the attachmentType
+	 */
+	setAttachmentType(attachmentType)	{
+		if((attachmentType != null) && (!(Object.prototype.toString.call(attachmentType) == "[object Number]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: attachmentType EXPECTED TYPE: number", null, null);
+		}
+		this.attachmentType = attachmentType;
+		this.keyModified.set("$attachment_type", 1);
 
 	}
 

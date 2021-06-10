@@ -31,7 +31,7 @@ class DBStore extends TokenStore {
      * @param {string} password - A String containing the DataBase password. Default value is an empty string
      * @param {string} portNumber - A String containing the DataBase port number. Default value is 3306
      */
-    constructor(host=null, databaseName=null, tableName=null, userName=null, password=null, portNumber=null) {
+    constructor(host = null, databaseName = null, tableName = null, userName = null, password = null, portNumber = null) {
         super();
 
         this.host = host;
@@ -51,18 +51,18 @@ class DBStore extends TokenStore {
         try {
             var connection = this.getConnection();
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
                 var oauthToken = token;
 
                 var sql = this.constructDBQuery(user.getEmail(), oauthToken, false);
 
-                return new Promise(function(resolve, reject) {
-                    connection.connect(function(err) {
-                        if(err) throw err;
+                return new Promise(function (resolve, reject) {
+                    connection.connect(function (err) {
+                        if (err) throw err;
 
-                        connection.query(sql, function(err, result) {
-                            if(err) {
+                        connection.query(sql, function (err, result) {
+                            if (err) {
                                 connection.end();
 
                                 throw new Error(err);
@@ -101,23 +101,23 @@ class DBStore extends TokenStore {
 
             var dbStoreInstance = this;
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
                 token.setUserMail(user.getEmail());
 
                 var sqlQuery = "INSERT INTO " + this.tableName + "(id,user_mail,client_id,client_secret,refresh_token,access_token,grant_token,expiry_time,redirect_url) VALUES ?";
 
                 var values = [
-                    [token.getId(), token.getUserMail(), token.getClientId(), token.getClientSecret(), token.getRefreshToken(), token.getAccessToken(), token.getGrantToken(), token.getExpiresIn(), token.getRedirectURL()]
+                    [token.getId(), user.getEmail(), token.getClientId(), token.getClientSecret(), token.getRefreshToken(), token.getAccessToken(), token.getGrantToken(), token.getExpiresIn(), token.getRedirectURL()]
                 ]
 
-                return new Promise(function(resolve, reject){
-                    dbStoreInstance.deleteToken(token).then(function(){
-                        connection.connect(function(err){
-                            if(err){
+                return new Promise(function (resolve, reject) {
+                    dbStoreInstance.deleteToken(token).then(function () {
+                        connection.connect(function (err) {
+                            if (err) {
                                 throw new Error(err);
                             }
 
-                            connection.query(sqlQuery, [values], function(err, result){
+                            connection.query(sqlQuery, [values], function (err, result) {
                                 if (err) {
                                     connection.end();
 
@@ -142,16 +142,16 @@ class DBStore extends TokenStore {
         try {
             var connection = this.getConnection();
 
-            if(token instanceof OAuthToken){
+            if (token instanceof OAuthToken) {
 
                 var sqlQuery = this.constructDBQuery(token.getUserMail(), token, true);
 
-                return new Promise(function(resolve, reject){
-                    connection.connect(function(err){
-                        if(err) throw err;
+                return new Promise(function (resolve, reject) {
+                    connection.connect(function (err) {
+                        if (err) throw err;
 
-                        connection.query(sqlQuery,function(err, result){
-                            if(err) {
+                        connection.query(sqlQuery, function (err, result) {
+                            if (err) {
                                 throw new Error(err);
                             }
 
@@ -176,12 +176,12 @@ class DBStore extends TokenStore {
 
             var sqlQuery = "select * from " + this.tableName + ";";
 
-            return new Promise(function(resolve, reject) {
-                connection.connect(function(err) {
-                    if(err) throw err;
+            return new Promise(function (resolve, reject) {
+                connection.connect(function (err) {
+                    if (err) throw err;
 
-                    connection.query(sqlQuery, function(err, result) {
-                        if(err) {
+                    connection.query(sqlQuery, function (err, result) {
+                        if (err) {
                             connection.end();
 
                             throw new Error(err);
@@ -190,24 +190,24 @@ class DBStore extends TokenStore {
                         connection.end();
 
                         if (result.length > 0) {
-                            for(let row of result) {
+                            for (let row of result) {
                                 let grantToken = (row.grant_token !== null && row.grant_token !== Constants.NULL_VALUE && row.grant_token.length > 0) ? row.grant_token : null;
 
-                                let token = new OAuthBuilder().clientId(row.client_id).clientSecret(row.client_secret).redirectURL(result[0].redirect_url).build();
+                                let token = new OAuthBuilder().clientId(row.client_id).clientSecret(row.client_secret).refreshToken(row.refresh_token).build();
 
                                 token.setId(row.id);
 
-                                if(grantToken != null) {
+                                if (grantToken != null) {
                                     token.setGrantToken(grantToken);
                                 }
 
                                 token.setUserMail(row.user_mail);
 
-                                token.setRefreshToken(row.refresh_token);
-
                                 token.setAccessToken(row.access_token);
 
                                 token.setExpiresIn(row.expiry_time);
+
+                                token.setRedirectURL(row.redirect_url);
 
                                 tokens.push(token);
                             }
@@ -232,12 +232,12 @@ class DBStore extends TokenStore {
 
             var sqlQuery = "delete from " + this.tableName + ";";
 
-            return new Promise(function(resolve, reject) {
-                connection.connect(function(err) {
-                    if(err) throw err;
+            return new Promise(function (resolve, reject) {
+                connection.connect(function (err) {
+                    if (err) throw err;
 
-                    connection.query(sqlQuery,function(err, result) {
-                        if(err) {
+                    connection.query(sqlQuery, function (err, result) {
+                        if (err) {
                             throw new Error(err);
                         }
 
@@ -254,15 +254,15 @@ class DBStore extends TokenStore {
     }
 
     constructDBQuery(email, token, isDelete) {
-        if(email == null) {
+        if (email == null) {
             throw new SDKException(Constants.USER_MAIL_NULL_ERROR, Constants.USER_MAIL_NULL_ERROR_MESSAGE);
         }
 
-        var query = isDelete? "delete from " : "select * from ";
+        var query = isDelete ? "delete from " : "select * from ";
 
         query += this.tableName + " where user_mail ='" + email + "' and client_id='" + token.getClientId() + "' and ";
 
-        if(token.getGrantToken() != null) {
+        if (token.getGrantToken() != null) {
             query += "grant_token='" + token.getGrantToken() + "'";
         }
         else {
@@ -288,16 +288,16 @@ class DBStore extends TokenStore {
         try {
             var connection = this.getConnection();
 
-            if(token instanceof OAuthToken) {
+            if (token instanceof OAuthToken) {
 
                 var sql = "select * from " + this.tableName + " where id='" + id + "'";
 
-                return new Promise(function(resolve, reject) {
-                    connection.connect(function(err) {
-                        if(err) throw err;
+                return new Promise(function (resolve, reject) {
+                    connection.connect(function (err) {
+                        if (err) throw err;
 
-                        connection.query(sql, function(err, result) {
-                            if(err) {
+                        connection.query(sql, function (err, result) {
+                            if (err) {
                                 connection.end();
 
                                 throw new Error(err);
@@ -306,26 +306,31 @@ class DBStore extends TokenStore {
                             connection.end();
 
                             if (result.length != 0) {
-                                let grantToken = (result[0].grant_token != null && result[0].grant_token !== Constants.NULL_VALUE && strlen(result[0].grant_token) > 0)? result[0].grant_token : null;
+                                let grantToken = (result[0].grant_token != null && result[0].grant_token !== Constants.NULL_VALUE && strlen(result[0].grant_token) > 0) ? result[0].grant_token : null;
 
-                                let oauthToken = new OAuthBuilder().clientId(result[0].client_id).clientSecret(result[0].client_secret).refreshToken(result[0].refresh_token).redirectURL(result[0].redirect_url).build();
+                                token.setClientId(result[0].client_id);
 
-                                oauthToken.setId(result[0].id);
+                                token.setClientSecret(result[0].client_secret);
 
-                                if(grantToken != null) {
+                                token.setRefreshToken(result[0].refresh_token);
+
+                                token.setId(result[0].id);
+
+                                if (grantToken != null) {
                                     oauthToken.setGrantToken(grantToken);
                                 }
 
-                                oauthToken.setUserMail(result[0].user_mail);
+                                token.setUserMail(result[0].user_mail);
 
-                                oauthToken.setAccessToken(result[0].access_token);
+                                token.setAccessToken(result[0].access_token);
 
-                                oauthToken.setExpiresIn(result[0].expiry_time);
+                                token.setExpiresIn(result[0].expiry_time);
 
-                                resolve(oauthToken);
+                                token.setRedirectURL(result[0].redirect_url);
+
+                                resolve(token);
                             }
-                            else
-                            {
+                            else {
                                 throw new SDKException(Constants.TOKEN_STORE, Constants.GET_TOKEN_BY_ID_DB_ERROR);
                             }
 
@@ -342,6 +347,6 @@ class DBStore extends TokenStore {
 }
 
 module.exports = {
-	MasterModel : DBStore,
-	DBStore : DBStore
+    MasterModel: DBStore,
+    DBStore: DBStore
 }

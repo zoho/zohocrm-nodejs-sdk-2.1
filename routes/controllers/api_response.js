@@ -1,7 +1,7 @@
 /**
  * This class is the common API response object.
  */
-class APIResponse{
+class APIResponse {
 
     statusCode;
 
@@ -25,10 +25,19 @@ class APIResponse{
     }
 
     /**
+     * The method to get the API Response headers
+     * @returns {Map} The map containing the API Response headers
+     */
+    getHeaders() {
+
+        return this.headers;
+    }
+
+    /**
      * The method to get the API response HTTP status code.
      * @returns {Integer} The integer containing the API response HTTP status code.
      */
-    getStatusCode(){
+    getStatusCode() {
 
         return this.statusCode;
     }
@@ -37,22 +46,13 @@ class APIResponse{
      * The method to get the API response class instance.
      * @returns {Object} The object containing the API response class instance.
      */
-    getObject(){
+    getObject() {
 
         return this.object;
-    }
-
-    /**
-     * The method to get the API Response headers
-     * @returns {Map} The map containing the API Response headers
-     */
-    getHeaders(){
-
-        return this.headers;
     }
 }
 
 module.exports = {
-    MasterModel : APIResponse,
-    APIResponse : APIResponse
+    MasterModel: APIResponse,
+    APIResponse: APIResponse
 }

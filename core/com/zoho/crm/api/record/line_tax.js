@@ -7,6 +7,7 @@ class LineTax{
 	name;
 	id;
 	value;
+	displayName;
 	keyModified = new Map();
 	/**
 	 * The method to get the percentage
@@ -93,6 +94,28 @@ class LineTax{
 		}
 		this.value = value;
 		this.keyModified.set("value", 1);
+
+	}
+
+	/**
+	 * The method to get the displayName
+	 * @returns {String} A String representing the displayName
+	 */
+	getDisplayName()	{
+		return this.displayName;
+
+	}
+
+	/**
+	 * The method to set the value to displayName
+	 * @param {String} displayName A String representing the displayName
+	 */
+	setDisplayName(displayName)	{
+		if((displayName != null) && (!(Object.prototype.toString.call(displayName) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: displayName EXPECTED TYPE: String", null, null);
+		}
+		this.displayName = displayName;
+		this.keyModified.set("display_name", 1);
 
 	}
 

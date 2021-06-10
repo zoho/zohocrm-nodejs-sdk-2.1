@@ -35,6 +35,7 @@ class Field{
 	id;
 	customField;
 	lookup;
+	filterable;
 	visible;
 	pickListValuesSortedLexically;
 	length;
@@ -53,7 +54,6 @@ class Field{
 	pickListValues;
 	autoNumber;
 	defaultValue;
-	sectionId;
 	validationRule;
 	convertMapping;
 	type;
@@ -642,7 +642,7 @@ class Field{
 
 	/**
 	 * The method to get the multiModuleLookup
-	 * @returns {Map} A Map representing the multiModuleLookup
+	 * @returns {MultiModuleLookup} An instance of MultiModuleLookup
 	 */
 	getMultiModuleLookup()	{
 		return this.multiModuleLookup;
@@ -651,11 +651,12 @@ class Field{
 
 	/**
 	 * The method to set the value to multiModuleLookup
-	 * @param {Map} multiModuleLookup A Map representing the multiModuleLookup
+	 * @param {MultiModuleLookup} multiModuleLookup An instance of MultiModuleLookup
 	 */
 	setMultiModuleLookup(multiModuleLookup)	{
-		if((multiModuleLookup != null) && (!(Object.prototype.toString.call(multiModuleLookup) == "[object Map]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: multiModuleLookup EXPECTED TYPE: Map", null, null);
+		const MultiModuleLookup = require("./multi_module_lookup").MasterModel;
+		if((multiModuleLookup != null) && (!(multiModuleLookup instanceof MultiModuleLookup)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: multiModuleLookup EXPECTED TYPE: MultiModuleLookup", null, null);
 		}
 		this.multiModuleLookup = multiModuleLookup;
 		this.keyModified.set("multi_module_lookup", 1);
@@ -749,6 +750,28 @@ class Field{
 		}
 		this.lookup = lookup;
 		this.keyModified.set("lookup", 1);
+
+	}
+
+	/**
+	 * The method to get the filterable
+	 * @returns {Boolean} A Boolean representing the filterable
+	 */
+	getFilterable()	{
+		return this.filterable;
+
+	}
+
+	/**
+	 * The method to set the value to filterable
+	 * @param {Boolean} filterable A Boolean representing the filterable
+	 */
+	setFilterable(filterable)	{
+		if((filterable != null) && (!(Object.prototype.toString.call(filterable) == "[object Boolean]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: filterable EXPECTED TYPE: Boolean", null, null);
+		}
+		this.filterable = filterable;
+		this.keyModified.set("filterable", 1);
 
 	}
 
@@ -1152,28 +1175,6 @@ class Field{
 		}
 		this.defaultValue = defaultValue;
 		this.keyModified.set("default_value", 1);
-
-	}
-
-	/**
-	 * The method to get the sectionId
-	 * @returns {number} A number representing the sectionId
-	 */
-	getSectionId()	{
-		return this.sectionId;
-
-	}
-
-	/**
-	 * The method to set the value to sectionId
-	 * @param {number} sectionId A number representing the sectionId
-	 */
-	setSectionId(sectionId)	{
-		if((sectionId != null) && (!(Object.prototype.toString.call(sectionId) == "[object Number]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: sectionId EXPECTED TYPE: number", null, null);
-		}
-		this.sectionId = sectionId;
-		this.keyModified.set("section_id", 1);
 
 	}
 

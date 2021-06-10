@@ -16,37 +16,49 @@ class DBBuilder {
     _tableName = Constants.MYSQL_TABLE_NAME;
 
     userName(userName) {
-        this._userName = userName;
+        if (userName != null) {
+            this._userName = userName;
+        }
 
         return this;
     }
 
     portNumber(portNumber) {
-        this._portNumber = portNumber;
+        if (portNumber != null) {
+            this._portNumber = portNumber;
+        }
 
         return this;
     }
 
     password(password) {
-        this._password = password;
+        if (password != null) {
+            this._password = password;
+        }
 
         return this;
     }
 
     host(host) {
-        this._host = host;
+        if (host != null) {
+            this._host = host;
+        }
 
         return this;
     }
 
     databaseName(databaseName) {
-        this._databaseName = databaseName;
+        if (databaseName != null) {
+            this._databaseName = databaseName;
+        }
 
         return this;
     }
 
     tableName(tableName) {
-        this._tableName = tableName;
+        if (tableName != null) {
+            this._tableName = tableName;
+        }
 
         return this;
     }
@@ -57,6 +69,6 @@ class DBBuilder {
 }
 
 module.exports = {
-    MasterModel : DBBuilder,
-    DBBuilder : DBBuilder
+    MasterModel: DBBuilder,
+    DBBuilder: DBBuilder
 }

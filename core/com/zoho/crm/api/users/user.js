@@ -91,6 +91,27 @@ class User extends Record{
 	}
 
 	/**
+	 * The method to get the sortOrderPreference
+	 * @returns {String} A String representing the sortOrderPreference
+	 */
+	getSortOrderPreference()	{
+		return this.getKeyValue("sort_order_preference");
+
+	}
+
+	/**
+	 * The method to set the value to sortOrderPreference
+	 * @param {String} sortOrderPreference A String representing the sortOrderPreference
+	 */
+	setSortOrderPreference(sortOrderPreference)	{
+		if((sortOrderPreference != null) && (!(Object.prototype.toString.call(sortOrderPreference) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: sortOrderPreference EXPECTED TYPE: String", null, null);
+		}
+		this.addKeyValue("sort_order_preference", sortOrderPreference);
+
+	}
+
+	/**
 	 * The method to get the city
 	 * @returns {String} A String representing the city
 	 */
@@ -403,6 +424,27 @@ class User extends Record{
 			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: countryLocale EXPECTED TYPE: String", null, null);
 		}
 		this.addKeyValue("country_locale", countryLocale);
+
+	}
+
+	/**
+	 * The method to get the sandboxdeveloper
+	 * @returns {Boolean} A Boolean representing the sandboxdeveloper
+	 */
+	getSandboxdeveloper()	{
+		return this.getKeyValue("sandboxDeveloper");
+
+	}
+
+	/**
+	 * The method to set the value to sandboxdeveloper
+	 * @param {Boolean} sandboxdeveloper A Boolean representing the sandboxdeveloper
+	 */
+	setSandboxdeveloper(sandboxdeveloper)	{
+		if((sandboxdeveloper != null) && (!(Object.prototype.toString.call(sandboxdeveloper) == "[object Boolean]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: sandboxdeveloper EXPECTED TYPE: Boolean", null, null);
+		}
+		this.addKeyValue("sandboxDeveloper", sandboxdeveloper);
 
 	}
 

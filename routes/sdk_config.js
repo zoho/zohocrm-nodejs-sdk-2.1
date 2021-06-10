@@ -48,6 +48,6 @@ class SDKConfig {
 }
 
 module.exports = {
-    MasterModel : SDKConfig,
-    SDKConfig : SDKConfig
+    MasterModel: SDKConfig,
+    SDKConfig: SDKConfig
 }

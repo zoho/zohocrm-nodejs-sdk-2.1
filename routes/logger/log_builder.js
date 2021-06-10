@@ -23,6 +23,6 @@ class LogBuilder {
 }
 
 module.exports = {
-    MasterModel : LogBuilder,
+    MasterModel: LogBuilder,
     LogBuilder: LogBuilder
 };

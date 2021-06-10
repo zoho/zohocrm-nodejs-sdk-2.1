@@ -4,7 +4,7 @@ const DataCenter = require("./data_center").DataCenter;
  * This class represents the properties of Zoho CRM in IN Domain.
  * @extends DataCenter
  */
-class INDataCenter extends DataCenter{
+class INDataCenter extends DataCenter {
 
 	static _PRODUCTION;
 
@@ -15,51 +15,51 @@ class INDataCenter extends DataCenter{
 	static IN = new INDataCenter();
 
 	/**
-     * This method represents the Zoho CRM Production environment in IN domain
-     * @returns {Environment} An instance of Environment
-     */
-	static PRODUCTION(){
-		if(INDataCenter._PRODUCTION  == null){
-            INDataCenter._PRODUCTION = DataCenter.setEnvironment("https://www.zohoapis.in", INDataCenter.IN.getIAMUrl(), INDataCenter.IN.getFileUploadUrl(), "in_prd");
+	 * This method represents the Zoho CRM Production environment in IN domain
+	 * @returns {Environment} An instance of Environment
+	 */
+	static PRODUCTION() {
+		if (this._PRODUCTION == null) {
+			this._PRODUCTION = DataCenter.setEnvironment("https://www.zohoapis.in", this.IN.getIAMUrl(), this.IN.getFileUploadUrl(), "in_prd");
 		}
 
-        return INDataCenter._PRODUCTION;
+		return this._PRODUCTION;
 	};
 
 	/**
-     * This method represents the Zoho CRM Sandbox environment in IN domain
-     * @returns {Environment} An instance of Environment
-     */
-	static SANDBOX(){
-		if(INDataCenter._SANDBOX == null){
-            INDataCenter._SANDBOX = DataCenter.setEnvironment("https://sandbox.zohoapis.in", INDataCenter.IN.getIAMUrl(), INDataCenter.IN.getFileUploadUrl(), "in_sdb");
+	 * This method represents the Zoho CRM Sandbox environment in IN domain
+	 * @returns {Environment} An instance of Environment
+	 */
+	static SANDBOX() {
+		if (this._SANDBOX == null) {
+			this._SANDBOX = DataCenter.setEnvironment("https://sandbox.zohoapis.in", this.IN.getIAMUrl(), this.IN.getFileUploadUrl(), "in_sdb");
 		}
 
-        return INDataCenter._SANDBOX;
+		return this._SANDBOX;
 	};
 
 	/**
-     * This method represents the Zoho CRM Developer environment in IN domain
-     * @returns {Environment} An instance of Environment
-     */
-	static DEVELOPER(){
-		if(INDataCenter._DEVELOPER == null){
-            INDataCenter._DEVELOPER = DataCenter.setEnvironment("https://developer.zohoapis.in", INDataCenter.IN.getIAMUrl(), INDataCenter.IN.getFileUploadUrl(), "in_dev");
+	 * This method represents the Zoho CRM Developer environment in IN domain
+	 * @returns {Environment} An instance of Environment
+	 */
+	static DEVELOPER() {
+		if (this._DEVELOPER == null) {
+			this._DEVELOPER = DataCenter.setEnvironment("https://developer.zohoapis.in", this.IN.getIAMUrl(), this.IN.getFileUploadUrl(), "in_dev");
 		}
 
-        return INDataCenter._DEVELOPER;
+		return this._DEVELOPER;
 	};
 
-	getIAMUrl(){
+	getIAMUrl() {
 		return "https://accounts.zoho.in/oauth/v2/token";
 	}
 
-	getFileUploadUrl(){
-        return "https://content.zohoapis.in"
-    }
+	getFileUploadUrl() {
+		return "https://content.zohoapis.in"
+	}
 }
 
 module.exports = {
-    MasterModel : INDataCenter,
-    INDataCenter : INDataCenter
+	MasterModel: INDataCenter,
+	INDataCenter: INDataCenter
 }

@@ -9,6 +9,7 @@ class Note{
 	createdTime;
 	parentId;
 	editable;
+	sharingPermission;
 	seModule;
 	isSharedToClient;
 	modifiedBy;
@@ -151,6 +152,28 @@ class Note{
 		}
 		this.editable = editable;
 		this.keyModified.set("$editable", 1);
+
+	}
+
+	/**
+	 * The method to get the sharingPermission
+	 * @returns {String} A String representing the sharingPermission
+	 */
+	getSharingPermission()	{
+		return this.sharingPermission;
+
+	}
+
+	/**
+	 * The method to set the value to sharingPermission
+	 * @param {String} sharingPermission A String representing the sharingPermission
+	 */
+	setSharingPermission(sharingPermission)	{
+		if((sharingPermission != null) && (!(Object.prototype.toString.call(sharingPermission) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: sharingPermission EXPECTED TYPE: String", null, null);
+		}
+		this.sharingPermission = sharingPermission;
+		this.keyModified.set("$sharing_permission", 1);
 
 	}
 
