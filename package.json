@@ -1,0 +1,31 @@
+{
+  "name": "@zohocrm/nodejs-sdk",
+  "version": "2.0.0",
+  "description": "Node JS SDK for Zoho CRM",
+  "main": "routes/Initializer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoho/zohocrm-nodejs-sdk-2.1"
+  },
+  "keywords": [
+    "Node",
+    "Zoho",
+    "CRM",
+    "OAuth2",
+    "API"
+  ],
+  "author": "Zoho CRM API Team (support@zohocrm.com)",
+  "license": "ISC",
+  "dependencies": {
+    "form-data": "^3.0.0",
+    "got": "^11.2.0",
+    "mysql": "^2.18.1",
+    "tunnel": "0.0.6",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "date": "^1.0.2",
+    "string-format": "^2.0.0",
+    "utils": "^0.3.1"
+  }
+}
