@@ -184,7 +184,7 @@ class OAuthToken extends Token {
 
             var oauthToken = null;
 
-            if(this.accessToken == null) {
+            if (this.accessToken == null) {
                 if (this.id != null) {
                     oauthToken = await store.getTokenById(this.id, this);
                 }
@@ -199,7 +199,7 @@ class OAuthToken extends Token {
             if (oauthToken === null) {//first time
                 token = (this.refreshToken != null) ? (await this.refreshAccessToken(user, store)).getAccessToken() : (await this.generateAccessToken(user, store)).getAccessToken();
             }
-            else if ((parseInt(oauthToken.getExpiresIn()) - parseInt(new Date().getTime())) < 5000) { //access token will expire in next 5 seconds or less
+            else if (oauthToken.getExpiresIn() != null && (parseInt(oauthToken.getExpiresIn()) - parseInt(new Date().getTime())) < 5000) { //access token will expire in next 5 seconds or less
                 Logger.info(Constants.REFRESH_TOKEN_MESSAGE);
 
                 token = (await this.refreshAccessToken(user, store)).getAccessToken();
@@ -208,7 +208,7 @@ class OAuthToken extends Token {
                 token = this.accessToken;
             }
 
-            urlConnection.addHeader(Constants.AUTHORIZATION, Constants.OAUTH_HEADER_PREFIX + token);
+            await urlConnection.addHeader(Constants.AUTHORIZATION, Constants.OAUTH_HEADER_PREFIX + token);
         } catch (error) {
             if (!(error instanceof SDKException)) {
                 error = new SDKException(null, null, null, error);
@@ -225,13 +225,13 @@ class OAuthToken extends Token {
 
         var formDataRequestBody = new formData();
 
-        formDataRequestBody.append(Constants.REFRESH_TOKEN, this.refreshToken);
-
         formDataRequestBody.append(Constants.CLIENT_ID, this.clientID);
 
         formDataRequestBody.append(Constants.CLIENT_SECRET, this.clientSecret);
 
         formDataRequestBody.append(Constants.GRANT_TYPE, Constants.REFRESH_TOKEN);
+
+        formDataRequestBody.append(Constants.REFRESH_TOKEN, this.refreshToken);
 
         const requestDetails = {
             method: Constants.REQUEST_METHOD_POST,
@@ -245,7 +245,6 @@ class OAuthToken extends Token {
         var response = await this.getResponse(url, requestDetails);
 
         try {
-
             await this.parseResponse(response.body);
 
             if (this.id == null) {
@@ -299,7 +298,7 @@ class OAuthToken extends Token {
 
             await this.parseResponse(response.body);
 
-            this.generateId();
+            await this.generateId();
 
             await store.saveToken(user, this);
 
@@ -368,7 +367,7 @@ class OAuthToken extends Token {
      * @param {String} redirectURL - A String containing the OAuth redirect URL.
      * @param {String} id - A string
      */
-    constructor(clientID, clientSecret, grantToken, refreshToken, redirectURL = null, id = null) {
+    constructor(clientID, clientSecret, grantToken, refreshToken, redirectURL = null, id = null, accessToken = null) {
         super();
 
         this.clientID = clientID;
@@ -381,7 +380,7 @@ class OAuthToken extends Token {
 
         this.redirectURL = redirectURL;
 
-        this.accessToken = null;
+        this.accessToken = accessToken;
 
         this.expiresIn = null;
 
@@ -391,7 +390,7 @@ class OAuthToken extends Token {
     async generateId() {
         let email = (await Initializer.getInitializer()).getUser().getEmail();
 
-        let builder = "nodejs_" + (email).substring(0, (email.indexOf('@'))) + "_";
+        let builder = Constants.NODEJS + (email).substring(0, (email.indexOf('@'))) + "_";
 
         builder = builder + (await Initializer.getInitializer()).getEnvironment().getName() + "_";
 

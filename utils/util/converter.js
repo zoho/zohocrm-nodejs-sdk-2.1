@@ -7,7 +7,6 @@ const Choice = require("./choice").Choice;
  * This class is to construct API request and response.
  */
 class Converter {
-
 	commonAPIHandler;
 
 	/**

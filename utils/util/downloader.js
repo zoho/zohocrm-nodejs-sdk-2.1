@@ -30,6 +30,8 @@ class Downloader extends Converter {
     getResponse(response, pack) {
         var instance = null;
 
+        var instanceValue = null;
+
         var recordJsonDetails = Initializer.jsonDetails[pack];
 
         if (recordJsonDetails.hasOwnProperty(Constants.INTERFACE) && recordJsonDetails[Constants.INTERFACE]) {
@@ -70,7 +72,7 @@ class Downloader extends Converter {
                         fileName = contentDisposition.substring(start_index + 1).replace(/"/g, "");
                     }
 
-                    var instanceValue = new StreamWrapper(fileName, response.rawBody, null);
+                    instanceValue = new StreamWrapper(fileName, response.rawBody, null);
                 }
 
                 Reflect.set(instance, memberName, instanceValue);

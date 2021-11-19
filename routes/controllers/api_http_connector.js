@@ -112,6 +112,10 @@ class APIHTTPConnector {
 		this.requestBody = requestBody;
 	}
 
+	getRequestBody() {
+        return this.requestBody;
+    }
+
 	/**
 	 * This method makes the Zoho CRM Rest API request.
 	 * @param {object} converterInstance A Converter class instance to call appendToRequest method.
@@ -163,7 +167,7 @@ class APIHTTPConnector {
 
 			let proxyAuthorization = null;
 
-			if (requestProxy.user != null) {
+			if (requestProxy.getUser() != null) {
 				proxyAuthorization = requestProxy.getUser() + ":" + requestProxy.getPassword();
 			}
 
@@ -240,7 +244,7 @@ class APIHTTPConnector {
 	proxyLog(requestProxy) {
 		let proxyDetails = Constants.PROXY_SETTINGS.concat(Constants.PROXY_HOST).concat(requestProxy.getHost()).concat(" , ").concat(Constants.PROXY_PORT).concat(requestProxy.getPort().toString());
 
-		if (requestProxy.user != null) {
+		if (requestProxy.getUser() != null) {
 			proxyDetails = proxyDetails.concat(" , ").concat(Constants.PROXY_USER).concat(requestProxy.getUser());
 		}
 

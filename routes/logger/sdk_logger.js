@@ -16,7 +16,7 @@ class SDKLogger {
 
             transports: [
                 new winston.transports.File({
-                    filename: loggerInstance.filePath
+                    filename: loggerInstance.getFilePath()
                 })
             ]
         });

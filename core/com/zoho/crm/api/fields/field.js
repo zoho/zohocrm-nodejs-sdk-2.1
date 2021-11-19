@@ -37,6 +37,7 @@ class Field{
 	lookup;
 	filterable;
 	visible;
+	displayField;
 	pickListValuesSortedLexically;
 	length;
 	viewType;
@@ -794,6 +795,28 @@ class Field{
 		}
 		this.visible = visible;
 		this.keyModified.set("visible", 1);
+
+	}
+
+	/**
+	 * The method to get the displayField
+	 * @returns {Boolean} A Boolean representing the displayField
+	 */
+	getDisplayField()	{
+		return this.displayField;
+
+	}
+
+	/**
+	 * The method to set the value to displayField
+	 * @param {Boolean} displayField A Boolean representing the displayField
+	 */
+	setDisplayField(displayField)	{
+		if((displayField != null) && (!(Object.prototype.toString.call(displayField) == "[object Boolean]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: displayField EXPECTED TYPE: Boolean", null, null);
+		}
+		this.displayField = displayField;
+		this.keyModified.set("display_field", 1);
 
 	}
 

@@ -10,7 +10,7 @@ const SDKException = require('../../core/com/zoho/crm/api/exception/sdk_exceptio
  * This class handles module field details.
  */
 class Utility {
-    static apiTypeVsdataType = new Map();
+    static apiTypeVsDataType = new Map();
 
     static apiTypeVsStructureName = new Map();
 
@@ -22,7 +22,7 @@ class Utility {
 
     static moduleAPIName;
 
-    static apiSupportedModule = new Map();
+    static apiSupportedModule = {};
 
     static async assertNotNull(value, errorCode, errorMessage) {
         if (value == null) {
@@ -157,6 +157,10 @@ class Utility {
 
             await Utility.setHandlerAPIPath(moduleAPIName, handlerInstance);
 
+            if(handlerInstance != null && handlerInstance.getModuleAPIName() == null && !Constants.SKIP_MODULES.includes(moduleAPIName.toLowerCase()))  {
+                return;
+            }
+
             recordFieldDetailsPath = await this.getFileName();
 
             if (fs.existsSync(recordFieldDetailsPath)) {
@@ -167,7 +171,7 @@ class Utility {
 
                 await Utility.fillDataType();
 
-                this.apiSupportedModule = this.apiSupportedModule.size > 0 ? this.apiSupportedModule : await Utility.getModules(null);
+                this.apiSupportedModule = Object.keys(this.apiSupportedModule).length > 0 > 0 ? this.apiSupportedModule : await Utility.getModules(null);
 
                 let recordFieldDetailsJson = fs.existsSync(recordFieldDetailsPath) ? Initializer.getJSON(recordFieldDetailsPath) : {};
 
@@ -176,7 +180,7 @@ class Utility {
                 if (Object.keys(this.apiSupportedModule).length > 0) {
                     for (let module in this.apiSupportedModule) {
                         if (!recordFieldDetailsJson.hasOwnProperty(module)) {
-                            let moduleData = this.apiSupportedModule.get(module);
+                            let moduleData = this.apiSupportedModule[module];
 
                             recordFieldDetailsJson[module] = {};
 
@@ -283,7 +287,7 @@ class Utility {
         fs.writeFileSync(recordFieldDetailsPath, JSON.stringify(recordFieldDetailsJson));
 
         if (Object.keys(modifiedModules).length > 0) {
-            for (let module of modifiedModules) {
+            for (let module in modifiedModules) {
                 if (recordFieldDetailsJson.hasOwnProperty(module)) {
 
                     delete recordFieldDetailsJson[module];
@@ -292,10 +296,10 @@ class Utility {
 
             fs.writeFileSync(recordFieldDetailsPath, JSON.stringify(recordFieldDetailsJson));
 
-            for (let module of modifiedModules) {
+            for (let module in modifiedModules) {
                 let moduleData = modifiedModules[module];
 
-                await Utility.getFieldsInfo(moduleData[Constants.API_NAME]);
+                await Utility.getFieldsInfo(moduleData[Constants.API_NAME], null);
             }
         }
     }
@@ -347,6 +351,8 @@ class Utility {
             if (!fs.existsSync(recordFieldDetailsPath) || (fs.existsSync(recordFieldDetailsPath) && (!Initializer.getJSON(recordFieldDetailsPath).hasOwnProperty(key) || (Initializer.getJSON(recordFieldDetailsPath)[key] == null) || Initializer.getJSON(recordFieldDetailsPath)[key].length <= 0))) {
                 isnewData = true;
 
+                moduleAPIName = await Utility.verifyModuleAPIName(moduleAPIName);
+
                 let relatedListValues = await this.getRelatedListDetails(moduleAPIName);
 
                 recordFieldDetailsJSON = fs.existsSync(recordFieldDetailsPath) ? await Initializer.getJSON(recordFieldDetailsPath) : {};
@@ -367,7 +373,6 @@ class Utility {
 
                 await Utility.getRelatedLists(relatedModuleName, moduleAPIName, commonAPIHandler);
             }
-
         } catch (error) {
             if (!(error instanceof SDKException)) {
                 error = new SDKException(null, null, null, error);
@@ -393,7 +398,7 @@ class Utility {
 
                     commonAPIHandler.setModuleAPIName(relatedListObject[Constants.MODULE]);
 
-                    await Utility.getFields(relatedListObject[Constants.MODULE]);
+                    await Utility.getFields(relatedListObject[Constants.MODULE], commonAPIHandler);
                 }
 
                 return true;
@@ -457,13 +462,6 @@ class Utility {
 
                     throw new SDKException(Constants.API_EXCEPTION, null, errorResponse, null);
                 }
-            }
-            else {
-                let errorResponse = {};
-
-                errorResponse[Constants.CODE] = response.getStatusCode();
-
-                throw new SDKException(Constants.API_EXCEPTION, null, errorResponse, null);
             }
         }
 
@@ -630,10 +628,12 @@ class Utility {
 
         let recordFieldDetailsPath = await this.getFileName();
 
-        if (!fs.existsSync(recordFieldDetailsPath) || (fs.existsSync(recordFieldDetailsPath) && Initializer.getJSON(recordFieldDetailsPath)[Constants.SDK_MODULE_METADATA] == null)) {
-            moduleData = Utility.getModules(null);
+        let fieldMetaJSON = Initializer.getJSON(recordFieldDetailsPath)
 
-            Utility.writeModuleMetaData(recordFieldDetailsPath, moduleData);
+        if (!fs.existsSync(recordFieldDetailsPath) || (fs.existsSync(recordFieldDetailsPath) && (!fieldMetaJSON.hasOwnProperty(Constants.SDK_MODULE_METADATA) || fieldMetaJSON[Constants.SDK_MODULE_METADATA] == null || fieldMetaJSON[Constants.SDK_MODULE_METADATA].length <= 0))) {
+            moduleData = await Utility.getModules(null);
+
+            await Utility.writeModuleMetaData(recordFieldDetailsPath, moduleData);
 
             return moduleData;
         }
@@ -662,7 +662,7 @@ class Utility {
 
         const GetModulesHeader = require("../../core/com/zoho/crm/api/modules/modules_operations").GetModulesHeader;
 
-        let apiNames = new Map();
+        let apiNames = {};
 
         let headerMap = new HeaderMap();
 
@@ -692,7 +692,7 @@ class Utility {
 
                             moduleDetails[Constants.GENERATED_TYPE] = module.getGeneratedType().getValue();
 
-                            apiNames.set(module.getAPIName().toLowerCase(), moduleDetails);
+                            apiNames[module.getAPIName().toLowerCase()] = moduleDetails;
                         }
                     });
                 }
@@ -708,14 +708,6 @@ class Utility {
                     throw new SDKException(Constants.API_EXCEPTION, null, errorResponse, null)
                 }
             }
-            else {
-                let errorResponse = {};
-
-                errorResponse[Constants.CODE] = response.getStatusCode();
-
-                throw new SDKException(Constants.API_EXCEPTION, null, errorResponse, null);
-            }
-
         }
 
         if (header == null) {
@@ -728,7 +720,7 @@ class Utility {
 
                 var recordFieldDetailsPath = await this.getFileName();
 
-                Utility.writeModuleMetaData(recordFieldDetailsPath, apiNames);
+                await Utility.writeModuleMetaData(recordFieldDetailsPath, apiNames);
             }
             catch (error) {
                 if (!(error instanceof SDKException)) {
@@ -767,22 +759,22 @@ class Utility {
     static async setDataType(fieldDetail, field, moduleAPIName) {
         var apiType = field.getDataType();
 
-        var module = "";
-
         var keyName = field.getAPIName();
+
+        var module = "";
 
         if (field.getSystemMandatory() != null && field.getSystemMandatory() == true && !(moduleAPIName.toLowerCase() == Constants.CALLS && keyName.toLowerCase() == Constants.CALL_DURATION)) {
             fieldDetail.required = true;
         }
 
-        if (keyName.toLowerCase() == Constants.PRICING_DETAILS.toLowerCase() && moduleAPIName.toLowerCase() == Constants.PRICE_BOOKS) {
+        if (keyName.toLowerCase() == Constants.PRICING_DETAILS_API_NAME.toLowerCase() && moduleAPIName.toLowerCase() == Constants.PRICE_BOOKS) {
             fieldDetail.name = keyName;
 
             fieldDetail.type = Constants.LIST_NAMESPACE;
 
-            fieldDetail.structure_name = Constants.PRICINGDETAILS;
+            fieldDetail.structure_name = Constants.PRICING_DETAILS;
 
-            fieldDetail.skip_mandatory = true;
+            fieldDetail[Constants.SKIP_MANDATORY] = true;
 
             return;
         }
@@ -793,7 +785,7 @@ class Utility {
 
             fieldDetail.structure_name = Constants.PARTICIPANTS;
 
-            fieldDetail.skip_mandatory = true;
+            fieldDetail[Constants.SKIP_MANDATORY] = true;
 
             return;
         }
@@ -837,7 +829,7 @@ class Utility {
 
             fieldDetail.structure_name = Constants.LINEITEM_PRODUCT;
 
-            fieldDetail.lookup = true;
+            fieldDetail[Constants.SKIP_MANDATORY] = true;
 
             return;
         }
@@ -857,15 +849,15 @@ class Utility {
 
             return;
         }
-        else if (Utility.apiTypeVsdataType.has(apiType)) {
-            fieldDetail.type = Utility.apiTypeVsdataType.get(apiType);
+        else if (Utility.apiTypeVsDataType.has(apiType)) {
+            fieldDetail.type = Utility.apiTypeVsDataType.get(apiType);
         }
         else if (apiType.toLowerCase() == Constants.FORMULA.toLowerCase()) {
             if (field.getFormula() != null) {
                 let returnType = field.getFormula().getReturnType();
 
-                if (returnType != null && Utility.apiTypeVsdataType.has(returnType)) {
-                    fieldDetail.type = Utility.apiTypeVsdataType.get(returnType);
+                if (returnType != null && Utility.apiTypeVsDataType.has(returnType) && Utility.apiTypeVsDataType.get(returnType) != null) {
+                    fieldDetail.type = Utility.apiTypeVsDataType.get(returnType);
                 }
             }
 
@@ -879,8 +871,8 @@ class Utility {
             fieldDetail.lookup = true;
         }
 
-        if (apiType.toLowerCase() == Constants.CONSENT_LOOKUP) {
-            fieldDetail.skip_mandatory = true;
+        if (apiType.toLowerCase() == Constants.CONSENT_LOOKUP || apiType.toLowerCase() == Constants.OWNER_LOOKUP) {
+            fieldDetail[Constants.SKIP_MANDATORY] = true;
         }
 
         if (apiType.toLowerCase() == Constants.MULTI_SELECT_LOOKUP) {
@@ -930,7 +922,7 @@ class Utility {
 
             fieldDetail.module = module;
 
-            fieldDetail.skip_mandatory = true;
+            fieldDetail[Constants.SKIP_MANDATORY] = true;
 
             fieldDetail.subform = true;
         }
@@ -942,7 +934,7 @@ class Utility {
                 fieldDetail.module = module;
 
                 if (module.toLowerCase() == Constants.ACCOUNTS && (field.getCustomField() != null && !field.getCustomField())) {
-                    fieldDetail.skip_mandatory = true;
+                    fieldDetail[Constants.SKIP_MANDATORY] = true;
                 }
             }
             else {
@@ -961,7 +953,7 @@ class Utility {
 
     static async fillDataType() {
 
-        if (this.apiTypeVsdataType.size > 0) {
+        if (this.apiTypeVsDataType.size > 0) {
             return;
         }
 
@@ -1010,117 +1002,117 @@ class Utility {
         let fieldAPINameLineTax = ["linetax"];
 
         for (let fieldAPIName of fieldAPINamesString) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.STRING_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.STRING_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesInteger) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.INTEGER_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.INTEGER_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesBoolean) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.BOOLEAN_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.BOOLEAN_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesLong) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LONG_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LONG_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesDouble) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.DOUBLE_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.DOUBLE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesDateTime) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.DATETIME_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.DATETIME_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesDate) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.DATE_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.DATE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesLookup) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.RECORD_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.RECORD_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.RECORD_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesPickList) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.CHOICE_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.CHOICE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesMultiSelectPickList) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.CHOICE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesSubForm) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.RECORD_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesOwnerLookUp) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.USER_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.USER_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.USER_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesMultiUserLookUp) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.USER_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesMultiModuleLookUp) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.MODULE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINamesFieldFile) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.FIELD_FILE_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameTaskRemindAt) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.REMINDAT_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.REMINDAT_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.REMINDAT_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameRecurringActivity) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.RECURRING_ACTIVITY_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.RECURRING_ACTIVITY_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.RECURRING_ACTIVITY_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameReminder) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.REMINDER_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameConsentLookUp) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.CONSENT_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.CONSENT_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.CONSENT_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameImageUpload) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.IMAGEUPLOAD_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPInameMultiSelectLookUp) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.RECORD_NAMESPACE);
         }
 
         for (let fieldAPIName of fieldAPINameLineTax) {
-            Utility.apiTypeVsdataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
+            Utility.apiTypeVsDataType.set(fieldAPIName, Constants.LIST_NAMESPACE);
 
             Utility.apiTypeVsStructureName.set(fieldAPIName, Constants.LINETAX);
         }

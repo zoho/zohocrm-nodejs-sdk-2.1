@@ -55,7 +55,7 @@ class Environment {
 
     /**
      * This method to get name.
-     * @return string A string representing the name.
+     * @return {string} A string representing the name.
      */
     getName() {
         return this.name;

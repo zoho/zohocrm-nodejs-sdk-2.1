@@ -1,8 +1,8 @@
 {
-  "name": "@zohocrm/nodejs-sdk",
-  "version": "2.0.0",
+  "name": "@zohocrm/nodejs-sdk-2.1",
+  "version": "1.0.0",
   "description": "Node JS SDK for Zoho CRM",
-  "main": "routes/Initializer",
+  "main": "routes/initializer",
   "repository": {
     "type": "git",
     "url": "https://github.com/zoho/zohocrm-nodejs-sdk-2.1"
@@ -27,5 +27,9 @@
     "date": "^1.0.2",
     "string-format": "^2.0.0",
     "utils": "^0.3.1"
+  },
+  "homepage": "https://github.com/zoho/zohocrm-nodejs-sdk-2.1#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

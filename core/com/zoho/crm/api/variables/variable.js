@@ -7,6 +7,7 @@ class Variable{
 	name;
 	description;
 	id;
+	source;
 	type;
 	variableGroup;
 	value;
@@ -96,6 +97,28 @@ class Variable{
 		}
 		this.id = id;
 		this.keyModified.set("id", 1);
+
+	}
+
+	/**
+	 * The method to get the source
+	 * @returns {String} A String representing the source
+	 */
+	getSource()	{
+		return this.source;
+
+	}
+
+	/**
+	 * The method to set the value to source
+	 * @param {String} source A String representing the source
+	 */
+	setSource(source)	{
+		if((source != null) && (!(Object.prototype.toString.call(source) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: source EXPECTED TYPE: String", null, null);
+		}
+		this.source = source;
+		this.keyModified.set("source", 1);
 
 	}
 

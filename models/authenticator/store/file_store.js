@@ -39,15 +39,27 @@ class FileStore extends TokenStore {
                     var nextRecord = allContents.split(",");
 
                     if (this.checkTokenExists(user.getEmail(), token, nextRecord)) {
-                        token.setAccessToken(nextRecord[5]);
+                        let grantToken = (nextRecord[6] != null && nextRecord[6].length > 0) ? nextRecord[6] : null;
 
-                        token.setExpiresIn(nextRecord[7]);
-
-                        token.setRefreshToken(nextRecord[4]);
+						let redirectURL = (nextRecord[8] != null && nextRecord[8].length > 0)? nextRecord[8] : null;
 
                         token.setId(nextRecord[0]);
 
                         token.setUserMail(nextRecord[1]);
+
+                        token.setClientId(nextRecord[2]);
+						
+						token.setClientSecret(nextRecord[3]);
+
+                        token.setRefreshToken(nextRecord[4]);
+
+                        token.setAccessToken(nextRecord[5]);
+
+                        token.setGrantToken(grantToken);
+
+                        token.setExpiresIn(nextRecord[7]);
+
+                        token.setRedirectURL(redirectURL);
 
                         return token;
                     }
@@ -61,13 +73,13 @@ class FileStore extends TokenStore {
         return null;
     }
 
-    saveToken(user, token) {
+    async saveToken(user, token) {
         try {
             if (token instanceof OAuthToken) {
 
                 token.setUserMail(user.getEmail());
 
-                this.deleteToken(token);
+                await this.deleteToken(token);
 
                 var data = [];
 
@@ -239,7 +251,7 @@ class FileStore extends TokenStore {
 
                         token.setRedirectURL(redirectURL);
 
-                        return oauthToken;
+                        return token;
                     }
                 }
 
