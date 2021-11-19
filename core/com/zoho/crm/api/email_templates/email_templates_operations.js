@@ -1,37 +1,28 @@
 const Param = require("../../../../../../routes/param").MasterModel;
+const ParameterMap = require("../../../../../../routes/parameter_map").MasterModel;
 const APIResponse = require("../../../../../../routes/controllers/api_response").MasterModel;
 const CommonAPIHandler = require("../../../../../../routes/middlewares/common_api_handler").MasterModel;
 const Constants = require("../../../../../../utils/util/constants").MasterModel;
 const SDKException = require("../exception/sdk_exception").MasterModel;
 
 class EmailTemplatesOperations{
-
-	module;
-	/**
-	 * Creates an instance of EmailTemplatesOperations with the given parameters
-	 * @param {String} module A String representing the module
-	 */
-	constructor(module=null){
-		if((module != null) && (!(Object.prototype.toString.call(module) == "[object String]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: module EXPECTED TYPE: String", null, null);
-		}
-		this.module = module;
-
-	}
-
 	/**
 	 * The method to get email templates
+	 * @param {ParameterMap} paramInstance An instance of ParameterMap
 	 * @returns {APIResponse} An instance of APIResponse
 	 * @throws {SDKException}
 	 */
-	async getEmailTemplates()	{
+	async getEmailTemplates(paramInstance=null)	{
+		if((paramInstance != null) && (!(paramInstance instanceof ParameterMap)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: paramInstance EXPECTED TYPE: ParameterMap", null, null);
+		}
 		var handlerInstance = new CommonAPIHandler();
 		var apiPath = '';
 		apiPath = apiPath.concat("/crm/v2.1/settings/email_templates");
 		handlerInstance.setAPIPath(apiPath);
 		handlerInstance.setHttpMethod(Constants.REQUEST_METHOD_GET);
 		handlerInstance.setCategoryMethod(Constants.REQUEST_CATEGORY_READ);
-		await handlerInstance.addParam(new Param("module", "com.zoho.crm.api.EmailTemplates.GetEmailTemplatesParam"), this.module);
+		handlerInstance.setParam(paramInstance);
 		let ResponseHandler = require.resolve("./response_handler");
 		return handlerInstance.apiCall(ResponseHandler, "application/json");
 
@@ -54,7 +45,6 @@ class EmailTemplatesOperations{
 		handlerInstance.setAPIPath(apiPath);
 		handlerInstance.setHttpMethod(Constants.REQUEST_METHOD_GET);
 		handlerInstance.setCategoryMethod(Constants.REQUEST_CATEGORY_READ);
-		await handlerInstance.addParam(new Param("module", "com.zoho.crm.api.EmailTemplates.GetEmailTemplatebyIDParam"), this.module);
 		let ResponseHandler = require.resolve("./response_handler");
 		return handlerInstance.apiCall(ResponseHandler, "application/json");
 
@@ -63,14 +53,10 @@ class EmailTemplatesOperations{
 }
 class GetEmailTemplatesParam{
 
-}
-
-class GetEmailTemplatebyIDParam{
-
+	static MODULE = new Param("module", "com.zoho.crm.api.EmailTemplates.GetEmailTemplatesParam");
 }
 
 module.exports = {
-	GetEmailTemplatebyIDParam : GetEmailTemplatebyIDParam,
 	MasterModel : EmailTemplatesOperations,
 	EmailTemplatesOperations : EmailTemplatesOperations,
 	GetEmailTemplatesParam : GetEmailTemplatesParam

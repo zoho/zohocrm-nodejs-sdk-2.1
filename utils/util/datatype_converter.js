@@ -16,53 +16,29 @@ class DatatypeConverter {
             return;
         }
 
-        var string = (obj) => {
-            return obj.toString();
-        }
+        var string = (obj) => { return obj.toString(); }
 
-        var integer = (obj) => {
-            return parseInt(obj);
-        }
+        var integer = (obj) => { return parseInt(obj); }
 
-        var long = (obj) => {
-            return obj.toString() != Constants.NULL_VALUE ? BigInt(obj) : null;
-        }
+        var long = (obj) => { return obj.toString() != Constants.NULL_VALUE ? BigInt(obj) : null; }
 
-        var longToString = (obj) => {
-            return obj.toString()
-        }
+        var longToString = (obj) => { return obj.toString() }
 
-        var bool = (obj) => {
-            return Boolean(obj);
-        }
+        var bool = (obj) => { return Boolean(obj); }
 
-        var stringToDateTime = (obj) => {
-            return new Date(obj);
-        }
+        var stringToDateTime = (obj) => { return new Date(obj); }
 
-        var dateTimeToString = (obj) => {
-            return obj.toISOString().split('.')[0] + "Z";
-        }
+        var dateTimeToString = (obj) => { return obj.toISOString().split('.')[0] + "Z"; }
 
-        var dateToString = (obj) => {
-            return obj.toISOString().split('T')[0];
-        }
+        var dateToString = (obj) => { return obj.toISOString().split('T')[0]; }
 
-        var stringToDate = (obj) => {
-            return new Date(obj);
-        }
+        var stringToDate = (obj) => { return new Date(obj); }
 
-        var double = (obj) => {
-            return parseFloat(obj.toString());
-        }
+        var double = (obj) => { return parseFloat(obj.toString()); }
 
-        var preObject = (obj) => {
-            return this.preConvertObjectData(obj);
-        }
+        var preObject = (obj) => { return this.preConvertObjectData(obj); }
 
-        var postObject = (obj) => {
-            return this.postConvertObjectData(obj);
-        }
+        var postObject = (obj) => { return this.postConvertObjectData(obj); }
 
         this.addToMap(Constants.STRING_NAMESPACE, string, string);
 
@@ -88,7 +64,7 @@ class DatatypeConverter {
     }
 
     static postConvertObjectData(obj) {
-        if (Array.isArray(obj)) {
+        if (Array.isArray(obj) && obj.length > 0) {
             let list = [];
 
             for (let data of obj) {

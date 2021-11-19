@@ -101,9 +101,9 @@ class CommonAPIHandler {
 			return;
 		}
 
-		if (this.param.parameterMap != null && this.param.getParameterMap().size > 0) {
-			for (let key of param.parameterMap.keys()) {
-				this.param.parameterMap.set(key, param.parameterMap.get(key));
+		if (this.param.getParameterMap() != null && this.param.getParameterMap().size > 0) {
+			for (let key of param.getParameterMap().keys()) {
+				this.param.getParameterMap().set(key, param.getParameterMap().get(key));
 			}
 		}
 		else {
@@ -116,7 +116,6 @@ class CommonAPIHandler {
 	 * @returns A String representing the Zoho CRM module API name.
 	 */
 	getModuleAPIName() {
-
 		return this.moduleAPIName;
 	}
 
@@ -125,7 +124,6 @@ class CommonAPIHandler {
 	 * @param {string} moduleAPIName - A String containing the Zoho CRM module API name.
 	 */
 	setModuleAPIName(moduleAPIName) {
-
 		this.moduleAPIName = moduleAPIName;
 	}
 
@@ -195,16 +193,16 @@ class CommonAPIHandler {
 			throw error;
 		}
 
-		connector.requestMethod = this.httpMethod;
+		connector.setRequestMethod(this.httpMethod);
 
-		connector.contentType = this.contentType;
+		connector.setContentType(this.contentType);
 
 		if (this.header != null && this.header.getHeaderMap().size > 0) {
-			connector.headers = this.header.getHeaderMap();
+			connector.setHeaders(this.header.getHeaderMap());
 		}
 
 		if (this.param != null && this.param.getParameterMap().size > 0) {
-			connector.parameters = this.param.getParameterMap();
+			connector.setParams(this.param.getParameterMap());
 		}
 
 		try {
@@ -254,8 +252,7 @@ class CommonAPIHandler {
 				baseName.push(className);
 
 				requestObject = await converterInstance.formRequest(this.request, baseName.join("/"), null, null);
-			}
-			catch (error) {
+			}catch (error) {
 				if (!(error instanceof SDKException)) {
 					error = new SDKException(null, null, null, error);
 				}
@@ -265,11 +262,11 @@ class CommonAPIHandler {
 				throw error;
 			}
 
-			connector.requestBody = requestObject;
+			connector.setRequestBody(requestObject);
 		}
 
 		try {
-			connector.headers.set(Constants.ZOHO_SDK, os.platform() + "/" + os.release() + " nodejs/" + process.version + ":" + Constants.SDK_VERSION);
+			connector.headers.set(Constants.ZOHO_SDK, os.platform() + "/" + os.release() + "/nodejs-2.1/" + process.version + ":" + Constants.SDK_VERSION);
 
 			let response = await connector.fireRequest(converterInstance);
 
@@ -329,16 +326,13 @@ class CommonAPIHandler {
 			case "application/ld+json":
 				type = new JSONConverter(this);
 				break;
-
 			case "application/xml":
 			case "text/xml":
 				type = new XMLConverter(this);
 				break;
-
 			case "multipart/form-data":
 				type = new FormDataConverter(this);
 				break;
-
 			case "image/png":
 			case "image/jpeg":
 			case "image/gif":

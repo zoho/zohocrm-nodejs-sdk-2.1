@@ -196,6 +196,8 @@ class GetNotesParam{
 	static PAGE = new Param("page", "com.zoho.crm.api.Notes.GetNotesParam");
 	static PER_PAGE = new Param("per_page", "com.zoho.crm.api.Notes.GetNotesParam");
 	static FIELDS = new Param("fields", "com.zoho.crm.api.Notes.GetNotesParam");
+	static SORT_ORDER = new Param("sort_order", "com.zoho.crm.api.Notes.GetNotesParam");
+	static SORT_BY = new Param("sort_by", "com.zoho.crm.api.Notes.GetNotesParam");
 }
 
 class GetNotesHeader{

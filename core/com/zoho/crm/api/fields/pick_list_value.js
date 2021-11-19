@@ -4,13 +4,16 @@ const SDKException = require("../exception/sdk_exception").MasterModel;
 class PickListValue{
 
 	displayValue;
+	probability;
+	forecastCategory;
+	actualValue;
+	id;
+	forecastType;
 	sequenceNumber;
 	expectedDataType;
 	maps;
-	actualValue;
 	sysRefName;
 	type;
-	id;
 	keyModified = new Map();
 	/**
 	 * The method to get the displayValue
@@ -31,6 +34,116 @@ class PickListValue{
 		}
 		this.displayValue = displayValue;
 		this.keyModified.set("display_value", 1);
+
+	}
+
+	/**
+	 * The method to get the probability
+	 * @returns {number} A number representing the probability
+	 */
+	getProbability()	{
+		return this.probability;
+
+	}
+
+	/**
+	 * The method to set the value to probability
+	 * @param {number} probability A number representing the probability
+	 */
+	setProbability(probability)	{
+		if((probability != null) && (!(Object.prototype.toString.call(probability) == "[object Number]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: probability EXPECTED TYPE: number", null, null);
+		}
+		this.probability = probability;
+		this.keyModified.set("probability", 1);
+
+	}
+
+	/**
+	 * The method to get the forecastCategory
+	 * @returns {BigInt} A BigInt representing the forecastCategory
+	 */
+	getForecastCategory()	{
+		return this.forecastCategory;
+
+	}
+
+	/**
+	 * The method to set the value to forecastCategory
+	 * @param {BigInt} forecastCategory A BigInt representing the forecastCategory
+	 */
+	setForecastCategory(forecastCategory)	{
+		if((forecastCategory != null) && (!(Object.prototype.toString.call(forecastCategory) == "[object BigInt]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: forecastCategory EXPECTED TYPE: BigInt", null, null);
+		}
+		this.forecastCategory = forecastCategory;
+		this.keyModified.set("forecast_category", 1);
+
+	}
+
+	/**
+	 * The method to get the actualValue
+	 * @returns {String} A String representing the actualValue
+	 */
+	getActualValue()	{
+		return this.actualValue;
+
+	}
+
+	/**
+	 * The method to set the value to actualValue
+	 * @param {String} actualValue A String representing the actualValue
+	 */
+	setActualValue(actualValue)	{
+		if((actualValue != null) && (!(Object.prototype.toString.call(actualValue) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: actualValue EXPECTED TYPE: String", null, null);
+		}
+		this.actualValue = actualValue;
+		this.keyModified.set("actual_value", 1);
+
+	}
+
+	/**
+	 * The method to get the id
+	 * @returns {BigInt} A BigInt representing the id
+	 */
+	getId()	{
+		return this.id;
+
+	}
+
+	/**
+	 * The method to set the value to id
+	 * @param {BigInt} id A BigInt representing the id
+	 */
+	setId(id)	{
+		if((id != null) && (!(Object.prototype.toString.call(id) == "[object BigInt]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: id EXPECTED TYPE: BigInt", null, null);
+		}
+		this.id = id;
+		this.keyModified.set("id", 1);
+
+	}
+
+	/**
+	 * The method to get the forecastType
+	 * @returns {String} A String representing the forecastType
+	 */
+	getForecastType()	{
+		return this.forecastType;
+
+	}
+
+	/**
+	 * The method to set the value to forecastType
+	 * @param {String} forecastType A String representing the forecastType
+	 */
+	setForecastType(forecastType)	{
+		if((forecastType != null) && (!(Object.prototype.toString.call(forecastType) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: forecastType EXPECTED TYPE: String", null, null);
+		}
+		this.forecastType = forecastType;
+		this.keyModified.set("forecast_type", 1);
 
 	}
 
@@ -101,28 +214,6 @@ class PickListValue{
 	}
 
 	/**
-	 * The method to get the actualValue
-	 * @returns {String} A String representing the actualValue
-	 */
-	getActualValue()	{
-		return this.actualValue;
-
-	}
-
-	/**
-	 * The method to set the value to actualValue
-	 * @param {String} actualValue A String representing the actualValue
-	 */
-	setActualValue(actualValue)	{
-		if((actualValue != null) && (!(Object.prototype.toString.call(actualValue) == "[object String]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: actualValue EXPECTED TYPE: String", null, null);
-		}
-		this.actualValue = actualValue;
-		this.keyModified.set("actual_value", 1);
-
-	}
-
-	/**
 	 * The method to get the sysRefName
 	 * @returns {String} A String representing the sysRefName
 	 */
@@ -163,28 +254,6 @@ class PickListValue{
 		}
 		this.type = type;
 		this.keyModified.set("type", 1);
-
-	}
-
-	/**
-	 * The method to get the id
-	 * @returns {BigInt} A BigInt representing the id
-	 */
-	getId()	{
-		return this.id;
-
-	}
-
-	/**
-	 * The method to set the value to id
-	 * @param {BigInt} id A BigInt representing the id
-	 */
-	setId(id)	{
-		if((id != null) && (!(Object.prototype.toString.call(id) == "[object BigInt]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: id EXPECTED TYPE: BigInt", null, null);
-		}
-		this.id = id;
-		this.keyModified.set("id", 1);
 
 	}
 

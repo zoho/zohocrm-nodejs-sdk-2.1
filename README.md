@@ -1,4 +1,4 @@
-# ZOHO CRM NODEJS SDK - 2.1
+# ZOHO CRM NODEJS SDK 2.1 for API version 2.1
 
 ## Table Of Contents
 
@@ -27,13 +27,13 @@ Since Zoho CRM APIs are authenticated with OAuth2 standards, you should register
 
 - Visit this page [https://api-console.zoho.com/](https://api-console.zoho.com)
 
-- Click on `ADD CLIENT`.
+- Click `ADD CLIENT`.
 
-- Choose a `Client Type`.
+- Choose the `Client Type`.
 
 - Enter **Client Name**, **Client Domain** or **Homepage URL** and **Authorized Redirect URIs** then click `CREATE`.
 
-- Your Client app would have been created and displayed by now.
+- Your Client app will be created.
 
 - Select the created OAuth client.
 
@@ -58,7 +58,7 @@ You can include the SDK to your project using:
     - Run the command below:
 
     ```sh
-    npm install @zohocrm/nodejs-sdk
+    npm install @zohocrm/nodejs-sdk-2.1
     ```
 - The NodeJS SDK will be installed and a package named **@zohocrm/nodejs-sdk** will be created in the local machine.
 
@@ -66,10 +66,9 @@ You can include the SDK to your project using:
     - Add dependencies to the package.json of the node server with the latest version (recommended)
     - Run **npm install** in the directory which installs all the dependencies mentioned in package.json.
 
-
 ## Token Persistence
 
-Token persistence refers to storing and utilizing the authentication tokens that are provided by Zoho. There are three ways provided by the SDK in which persistence can be utilized. They are DataBase Persistence, File Persistence and Custom Persistence.
+Token persistence refers to storing and utilizing the authentication tokens that are provided by Zoho. There are three ways provided by the SDK in which persistence can be utilized. They are DataBase Persistence, File Persistence, and Custom Persistence.
 
 ### Table of Contents
 
@@ -111,7 +110,7 @@ In case the user prefers to use default DataBase persistence, **MySQL** can be u
 
 - The database name should be **zohooauth**.
 
-- There must be a table name **oauthtoken** with columns.
+- There must be a table named **oauthtoken** with the following columns.
 
   - id varchar(255)
 
@@ -156,7 +155,7 @@ CREATE TABLE oauthtoken (
 #### Create DBStore object
 
 ```js
-const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
+const DBBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/db_builder").DBBuilder;
 /*
  * DBStore takes the following parameters
  * host -> DataBase host name. Default value "localhost"
@@ -166,8 +165,6 @@ const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_bu
  * portNumber -> DataBase port number. Default value "3306"
  * tableName -> Table Name. Default value "oauthtoken"
 */
-
-let tokenstore = new DBStore().build();
 
 let tokenstore = new DBBuilder()
 .host("hostName")
@@ -181,7 +178,7 @@ let tokenstore = new DBBuilder()
 
 ### File Persistence
 
-In case of default File Persistence, the user can persist tokens in the local drive, by providing the the absolute file path to the FileStore object. The File contains the following
+In case of default File Persistence, the user can persist tokens in the local drive, by providing the the absolute file path to the FileStore object.
 
 - The File contains
 
@@ -206,7 +203,7 @@ In case of default File Persistence, the user can persist tokens in the local dr
 #### Create FileStore object
 
 ```js
-const FileStore = require( "@zohocrm/nodejs-sdk/models/authenticator/store/file_store").FileStore;
+const FileStore = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/file_store").FileStore;
 /*
  * FileStore takes the following parameter
  * 1 -> Absolute file path of the file to persist tokens
@@ -219,10 +216,9 @@ let tokenstore = new FileStore("/Users/username/Documents/nodejs_sdk_tokens.txt"
 To use Custom Persistence, the user must extend **[TokenStore Class](models/authenticator/store/token_store.js)** and override the methods.
 
 ```js
-const TokenStore = require('@zohocrm/nodejs-sdk/models/authenticator/store/token_store').TokenStore;
+const TokenStore = require('@zohocrm/nodejs-sdk-2.1/models/authenticator/store/token_store').TokenStore;
 
 class CustomStore extends TokenStore{
-
     constructor(){
         super();
     }
@@ -292,26 +288,19 @@ module.exports = {CustomStore}
 
 Before you get started with creating your NodeJS application, you need to register your client and authenticate the app with Zoho.
 
-- Create an instance of **Logger** Class to log exception and API information.
-
-    ```js
-    const {Levels} = require("@zohocrm/nodejs-sdk/routes/logger/logger");
-    const LogBuilder = require("@zohocrm/nodejs-sdk/routes/logger/log_builder").LogBuilder;
-    /*
-    * Create an instance of Logger Class that requires the following
-    * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
-    * filePath -> Absolute file path, where messages need to be logged.
-    */
-    let logger = new LogBuilder()
-        .level(Levels.INFO)
-        .filePath("/Users/Documents/final-logs.txt")
-        .build();
-    ```
+| Mandatory Keys    | Optional Keys |
+| :---------------- | :------------ |
+| user              | logger        |
+| environment       | store         |
+| token             | SDKConfig     |
+|                   | requestProxy  |
+|                   | resourcePath  |
+----
 
 - Create an instance of **UserSignature** Class that identifies the current user.
 
     ```js
-    const UserSignature = require( "@zohocrm/nodejs-sdk/routes/user_signature").UserSignature;
+    const UserSignature = require( "@zohocrm/nodejs-sdk-2.1/routes/user_signature").UserSignature;
     //Create an UserSignature instance that takes user Email as parameter
     let user = new UserSignature("abc@zoho.com");
     ```
@@ -319,7 +308,7 @@ Before you get started with creating your NodeJS application, you need to regist
 - Configure API environment which decides the domain and the URL to make API calls.
 
     ```js
-    const USDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/us_data_center").USDataCenter;
+    const USDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/us_data_center").USDataCenter;
     /*
      * Configure the environment
      * which is of the pattern Domain.Environment
@@ -332,13 +321,14 @@ Before you get started with creating your NodeJS application, you need to regist
 - Create an instance of **[OAuthToken](models/authenticator/oauth_token.js)** with the information that you get after registering your Zoho client.
 
     ```js
-    const OAuthBuilder = require("@zohocrm/nodejs-sdk/models/authenticator/oauth_builder").OAuthBuilder;
+    const OAuthBuilder = require("@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_builder").OAuthBuilder;
 
     /*
     * Create a Token instance that requires the following
     * clientId -> OAuth client id.
     * clientSecret -> OAuth client secret.
     * refreshToken -> REFRESH token.
+    * accessToken -> Access token.
     * grantToken -> GRANT token.
     * id -> User unique id.
     * redirectURL -> OAuth redirect URL.
@@ -365,12 +355,32 @@ Before you get started with creating your NodeJS application, you need to regist
     .refreshToken("refreshToken")
     .redirectURL("redirectURL")
     .build();
+
+    let token = new OAuthBuilder()
+    .accessToken("accessToken")
+    .build();
     ```
 
-- Create an instance of **TokenStore** to persist tokens, used for authenticating all the requests.
+- Create an instance of **Logger** Class to log exception and API information. By default, the SDK constructs a Logger instance with level - INFO and file_path - (sdk_logs.log parallel to node_modules)
 
     ```js
-    const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
+    const {Levels} = require("@zohocrm/nodejs-sdk-2.1/routes/logger/logger");
+    const LogBuilder = require("@zohocrm/nodejs-sdk-2.1/routes/logger/log_builder").LogBuilder;
+    /*
+    * Create an instance of Logger Class that requires the following
+    * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
+    * filePath -> Absolute file path, where messages need to be logged.
+    */
+    let logger = new LogBuilder()
+        .level(Levels.INFO)
+        .filePath("/Users/Documents/final-logs.txt")
+        .build();
+    ```
+
+- Create an instance of **TokenStore** to persist tokens, used for authenticating all the requests. By default, the SDK creates the sdk_tokens.txt file (parallel to node_modules folder) to persist the tokens.
+
+    ```js
+    const DBBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/db_builder").DBBuilder;
 
     /*
     * Create an instance of DBStore that requires the following
@@ -381,8 +391,6 @@ Before you get started with creating your NodeJS application, you need to regist
     * portNumber -> DataBase port number. Default value "3306"
     * tabletName -> DataBase table name. Default value "oauthtoken"
     */
-
-    let tokenstore = new DBStore().build();
 
     let tokenstore = new DBBuilder()
         .host("hostName")
@@ -401,10 +409,11 @@ Before you get started with creating your NodeJS application, you need to regist
 - Create an instance of **SDKConfig** containing the SDK configuration.
 
     ```js
-    const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").SDKConfigBuilder;
+    const SDKConfigBuilder = require("@zohocrm/nodejs-sdk-2.1/routes/sdk_config_builder").SDKConfigBuilder;
 
     /*
-     * autoRefreshFields
+     * By default, the SDK creates the SDKConfig instance
+     * autoRefreshFields (default value is false)
      * if true - all the modules' fields will be auto-refreshed in the background, every hour.
      * if false - the fields will not be auto-refreshed in the background. The user can manually delete the file(s) or refresh the fields using methods from ModuleFieldsHandler(utils/util/module_fields_handler.js)
      *
@@ -416,16 +425,10 @@ Before you get started with creating your NodeJS application, you need to regist
     let sdkConfig = new SDKConfigBuilder().pickListValidation(false).autoRefreshFields(true).build();
     ```
 
-- The path containing the absolute directory path (in the key resourcePath) to store user-specific files containing information about fields in modules.
+- Create an instance of **[RequestProxy](routes/request_proxy.js)** containing the proxy properties of the user.
 
     ```js
-    let resourcePath = "/Users/user_name/Documents/nodejs-app";
-    ```
-
-- Create an instance of [RequestProxy](routes/request_proxy.js) containing the proxy properties of the user.
-
-    ```js
-    const RequestProxy = require( "@zohocrm/nodejs-sdk/routes/request_proxy").RequestProxy;
+    const RequestProxy = require( "@zohocrm/nodejs-sdk-2.1/routes/request_proxy").RequestProxy;
 
     /*
      * RequestProxy class takes the following parameters
@@ -442,25 +445,29 @@ Before you get started with creating your NodeJS application, you need to regist
      .build();
     ```
 
+- The path containing the absolute directory path to store user specific files containing module fields information. By default, the SDK stores the user-specific files in a folder parallel to node_modules
+
+    ```js
+    let resourcePath = "/Users/user_name/Documents/nodejs-app";
+    ```
+
 ## Initializing the Application
 
 Initialize the SDK using the following code.
 
 ```js
-const InitializeBuilder = require( "@zohocrm/nodejs-sdk/routes/initialize_builder").InitializeBuilder;
-const OAuthBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/oauth_builder").OAuthBuilder;
-const UserSignature = require( "@zohocrm/nodejs-sdk/routes/user_signature").UserSignature;
-const {Levels} = require( "@zohocrm/nodejs-sdk/routes/logger/logger");
-const LogBuilder = require( "@zohocrm/nodejs-sdk/routes/logger/log_builder").LogBuilder;
-const USDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/us_data_center").USDataCenter;
-const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
-const FileStore = require( "@zohocrm/nodejs-sdk/models/authenticator/store/file_store").FileStore;
-const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").SDKConfigBuilder;
-const ProxyBuilder = require( "@zohocrm/nodejs-sdk/routes/proxy_builder").ProxyBuilder;
-
+const InitializeBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/initialize_builder").InitializeBuilder;
+const OAuthBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_builder").OAuthBuilder;
+const UserSignature = require( "@zohocrm/nodejs-sdk-2.1/routes/user_signature").UserSignature;
+const {Levels} = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/logger");
+const LogBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/log_builder").LogBuilder;
+const USDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/us_data_center").USDataCenter;
+const DBBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/db_builder").DBBuilder;
+const FileStore = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/file_store").FileStore;
+const SDKConfigBuilder = require("@zohocrm/nodejs-sdk-2.1/routes/sdk_config_builder").SDKConfigBuilder;
+const ProxyBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/proxy_builder").ProxyBuilder;
 
 class Initializer {
-
     static async initialize() {
        /*
         * Create an instance of Logger Class that requires the following
@@ -542,7 +549,10 @@ class Initializer {
          * if true - the SDK validates the input. If the value does not exist in the pick list, the SDK throws an error.
          * if false - the SDK does not validate the input and makes the API request with the user’s input to the pick list
      	*/
-    	let sdkConfig = new SDKConfigBuilder().pickListValidation(false).autoRefreshFields(true).build();
+    	let sdkConfig = new SDKConfigBuilder()
+        .pickListValidation(false)
+        .autoRefreshFields(true)
+        .build();
 
         /*
          * The path containing the absolute directory path to store user specific JSON files containing module fields information.
@@ -669,7 +679,7 @@ All other exceptions such as SDK anomalies and other unexpected behaviours are t
 
 ## Multi-User support in the NodeJS SDK
 
-The **NodeJS SDK** (version 2.x.x) supports both single-user and multi-user app.
+The **NodeJS SDK** (version 1.x.x) supports both single-user and multi-user app.
 
 ### Multi-user App
 
@@ -681,12 +691,12 @@ Multi-users functionality is achieved using **switchUser()** method.
     .user(user)
     .environment(environment)
     .token(token)
-    .store(tokenstore)
     .SDKConfig(sdkConfig)
     .switchUser();
 ```
 
 To Remove a user's configuration in SDK. Use the below code
+
 ```js
 await Initializer.removeUserConfiguration(user, environment)
 ```
@@ -694,58 +704,35 @@ await Initializer.removeUserConfiguration(user, environment)
 ### Sample Multi-user code
 
 ```js
-const InitializeBuilder = require( "@zohocrm/nodejs-sdk/routes/initialize_builder").InitializeBuilder;
-const OAuthBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/oauth_builder").OAuthBuilder;
-const UserSignature = require( "@zohocrm/nodejs-sdk/routes/user_signature").UserSignature;
-const {Levels} = require( "@zohocrm/nodejs-sdk/routes/logger/logger");
-const LogBuilder = require( "@zohocrm/nodejs-sdk/routes/logger/log_builder").LogBuilder;
-const USDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/us_data_center").USDataCenter;
-const EUDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/eu_data_center").EUDataCenter;
-const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
-const FileStore = require( "@zohocrm/nodejs-sdk/models/authenticator/store/file_store").FileStore;
-const {RecordOperations} = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations");
-const ParameterMap = require("@zohocrm/nodejs-sdk/routes/parameter_map").ParameterMap;
-const HeaderMap = require("@zohocrm/nodejs-sdk/routes/header_map").HeaderMap;
-const ResponseWrapper = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/response_wrapper").ResponseWrapper;
-const ProxyBuilder = require( "@zohocrm/nodejs-sdk/routes/proxy_builder").ProxyBuilder;
-const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").MasterModel;
-const GetRecordsParam = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations").GetRecordsParam;
-const GetRecordsHeader = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations").GetRecordsHeader;
+const InitializeBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/initialize_builder").InitializeBuilder;
+const OAuthBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_builder").OAuthBuilder;
+const UserSignature = require( "@zohocrm/nodejs-sdk-2.1/routes/user_signature").UserSignature;
+const {Levels} = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/logger");
+const LogBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/log_builder").LogBuilder;
+const USDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/us_data_center").USDataCenter;
+const EUDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/eu_data_center").EUDataCenter;
+const DBBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/db_builder").DBBuilder;
+const FileStore = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/file_store").FileStore;
+const {RecordOperations} = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/record_operations");
+const ParameterMap = require("@zohocrm/nodejs-sdk-2.1/routes/parameter_map").ParameterMap;
+const HeaderMap = require("@zohocrm/nodejs-sdk-2.1/routes/header_map").HeaderMap;
+const ResponseWrapper = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/response_wrapper").ResponseWrapper;
+const ProxyBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/proxy_builder").ProxyBuilder;
+const SDKConfigBuilder = require("@zohocrm/nodejs-sdk-2.1/routes/sdk_config_builder").MasterModel;
+const GetRecordsParam = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/record_operations").GetRecordsParam;
+const GetRecordsHeader = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/record_operations").GetRecordsHeader;
 
 class Record {
-
     static async call() {
-        /*
-		 * Create an instance of Logger Class that takes two parameters
-		 * 1 -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
-		 * 2 -> Absolute file path, where messages need to be logged.
-		 */
         let logger = new LogBuilder()
         .level(Levels.INFO)
         .filePath("/Users/username/final-logs.txt")
         .build();
 
-        /*
-         * Create an UserSignature instance that takes user Email as parameter
-         */
         let user1 = new UserSignature("abc@zoho.com");
 
-        /*
-		 * Configure the environment
-		 * which is of the pattern Domain.Environment
-		 * Available Domains: USDataCenter, EUDataCenter, INDataCenter, CNDataCenter, AUDataCenter
-		 * Available Environments: PRODUCTION(), DEVELOPER(), SANDBOX()
-		 */
         let environment1 = USDataCenter.PRODUCTION();
 
-        /*
-		 * Create a Token instance
-		 * clientId -> OAuth client id.
-		 * clientSecret -> OAuth client secret.
-         * refreshToken -> GRANT token.
-		 * refreshToken -> REFRESH token.
-         * redirectURL -> OAuth redirect URL. Default value is null
-		 */
         let token1 = new OAuthBuilder()
         .clientId("clientId")
         .clientSecret("clientSecret")
@@ -753,17 +740,6 @@ class Record {
         .refreshToken("refreshToken")
         .redirectURL("redirectURL")
         .build();
-
-        /*
-		 * Create an instance of TokenStore.
-		 * host -> DataBase host name. Default "localhost"
-		 * databaseName -> DataBase name. Default "zohooauth"
-		 * userName -> DataBase user name. Default "root"
-		 * password -> DataBase password. Default ""
-		 * portNumber -> DataBase port number. Default "3306"
-         * tableName -> DataBase table name. Default value "oauthtoken"
-		 */
-        let tokenstore = new DBStore().build();
 
         let tokenstore = new DBBuilder()
             .host("hostName")
@@ -774,39 +750,15 @@ class Record {
             .password("password")
             .build();
 
-        /*
-		 * Create an instance of FileStore that takes absolute file path as parameter
-		*/
         let tokenstore = new FileStore("/Users/username/nodejs_sdk_tokens.txt");
 
-        /*
-        * autoRefreshFields
-        * if true - all the modules' fields will be auto-refreshed in the background, every hour.
-        * if false - the fields will not be auto-refreshed in the background. The user can manually delete the file(s) or refresh the fields using methods from ModuleFieldsHandler(utils/util/module_fields_handler.js)
-        *
-        * pickListValidation
-        * A boolean field that validates user input for a pick list field and allows or disallows the addition of a new value to the list.
-        * True - the SDK validates the input. If the value does not exist in the pick list, the SDK throws an error.
-        * False - the SDK does not validate the input and makes the API request with the user’s input to the pick list
-        */
-        let sdkConfig = new SDKConfigBuilder().pickListValidation(false).autoRefreshFields(true).build();
+        let sdkConfig = new SDKConfigBuilder()
+        .pickListValidation(false)
+        .autoRefreshFields(true)
+        .build();
 
-        /*
-         * The path containing the absolute directory path to store user specific JSON files containing module fields information.
-         */
         let resourcePath = "/Users/username";
 
-        /*
-         * Call the static initialize method of Initializer class that takes the following arguments
-         * 1 -> UserSignature instance
-         * 2 -> Environment instance
-         * 3 -> Token instance
-         * 4 -> TokenStore instance
-         * 5 -> SDKConfig instance
-         * 6 -> resourcePath
-         * 7 -> Logger instance. Default value is null
-         * 8 -> RequestProxy instance. Default value is null
-         */
         (await new InitializeBuilder())
         .user(user1)
         .environment(environment1)
@@ -840,7 +792,10 @@ class Record {
             .password("password")
             .build();
 
-        let sdkConfig2 = new SDKConfigBuilder().pickListValidation(true).autoRefreshFields(true).build();
+        let sdkConfig2 = new SDKConfigBuilder()
+        .pickListValidation(true)
+        .autoRefreshFields(true)
+        .build();
 
         (await new InitializeBuilder())
         .user(user2)
@@ -987,26 +942,24 @@ Record.call();
 ## SDK Sample code
 
 ```js
-const InitializeBuilder = require( "@zohocrm/nodejs-sdk/routes/initialize_builder").InitializeBuilder;
-const OAuthBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/oauth_builder").OAuthBuilder;
-const UserSignature = require( "@zohocrm/nodejs-sdk/routes/user_signature").UserSignature;
-const {Levels} = require( "@zohocrm/nodejs-sdk/routes/logger/logger");
-const LogBuilder = require( "@zohocrm/nodejs-sdk/routes/logger/log_builder").LogBuilder;
-const USDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/us_data_center").USDataCenter;
-const EUDataCenter = require( "@zohocrm/nodejs-sdk/routes/dc/eu_data_center").EUDataCenter;
-const DBBuilder = require( "@zohocrm/nodejs-sdk/models/authenticator/store/db_builder").DBBuilder;
-const FileStore = require( "@zohocrm/nodejs-sdk/models/authenticator/store/file_store").FileStore;
-const {RecordOperations} = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/record_operations");
-const ParameterMap = require("@zohocrm/nodejs-sdk/routes/parameter_map").ParameterMap;
-const HeaderMap = require("@zohocrm/nodejs-sdk/routes/header_map").HeaderMap;
-const ResponseWrapper = require("@zohocrm/nodejs-sdk/core/com/zoho/crm/api/record/response_wrapper").ResponseWrapper;
-const ProxyBuilder = require( "@zohocrm/nodejs-sdk/routes/proxy_builder").ProxyBuilder;
-const SDKConfigBuilder = require("@zohocrm/nodejs-sdk/routes/sdk_config_builder").MasterModel;
+const InitializeBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/initialize_builder").InitializeBuilder;
+const OAuthBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_builder").OAuthBuilder;
+const UserSignature = require( "@zohocrm/nodejs-sdk-2.1/routes/user_signature").UserSignature;
+const {Levels} = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/logger");
+const LogBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/logger/log_builder").LogBuilder;
+const USDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/us_data_center").USDataCenter;
+const EUDataCenter = require( "@zohocrm/nodejs-sdk-2.1/routes/dc/eu_data_center").EUDataCenter;
+const DBBuilder = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/db_builder").DBBuilder;
+const FileStore = require( "@zohocrm/nodejs-sdk-2.1/models/authenticator/store/file_store").FileStore;
+const {RecordOperations} = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/record_operations");
+const ParameterMap = require("@zohocrm/nodejs-sdk-2.1/routes/parameter_map").ParameterMap;
+const HeaderMap = require("@zohocrm/nodejs-sdk-2.1/routes/header_map").HeaderMap;
+const ResponseWrapper = require("@zohocrm/nodejs-sdk-2.1/core/com/zoho/crm/api/record/response_wrapper").ResponseWrapper;
+const ProxyBuilder = require( "@zohocrm/nodejs-sdk-2.1/routes/proxy_builder").ProxyBuilder;
+const SDKConfigBuilder = require("@zohocrm/nodejs-sdk-2.1/routes/sdk_config_builder").MasterModel;
 
-class Record{
-
-    static async getRecords(){
-
+class Record {
+    static async getRecords() {
         /*
 		 * Create an instance of Logger Class that requires the following
 		 * level -> Level of the log messages to be logged. Can be configured by typing Levels "." and choose any level from the list displayed.
@@ -1079,7 +1032,10 @@ class Record{
         * True - the SDK validates the input. If the value does not exist in the pick list, the SDK throws an error.
         * False - the SDK does not validate the input and makes the API request with the user’s input to the pick list
         */
-        let sdkConfig = new SDKConfigBuilder().pickListValidation(false).autoRefreshFields(true).build();
+        let sdkConfig = new SDKConfigBuilder()
+        .pickListValidation(false)
+        .autoRefreshFields(true)
+        .build();
 
         /*
          * The path containing the absolute directory path to store user specific JSON files containing module fields information.

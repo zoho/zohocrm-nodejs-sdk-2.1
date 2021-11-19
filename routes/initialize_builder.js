@@ -16,9 +16,19 @@ const Environment = require("../routes/dc/environment").Environment;
 
 const Initializer = require('./initializer').Initializer;
 
-const loggerFile = require('./logger/logger');
-
 const fs = require("fs");
+
+const path = require("path");
+
+const { Logger, Levels } = require("./logger/logger");
+
+const LogBuilder = require("./logger/log_builder").LogBuilder;
+
+const SDKConfigBuilder = require("../routes/sdk_config_builder").SDKConfigBuilder;
+
+const FileStore = require("../models/authenticator/store/file_store").FileStore;
+
+const RequestProxy = require('./request_proxy').RequestProxy;
 
 class InitializeBuilder {
     _environment;
@@ -61,22 +71,28 @@ class InitializeBuilder {
     }
 
     initialize() {
-        Utility.assertNotNull(this._user, this.errorMessage, Constants.USERSIGNATURE_ERROR_MESSAGE);
+        Utility.assertNotNull(this._user, this.errorMessage, Constants.USER_SIGNATURE_ERROR_MESSAGE);
 
         Utility.assertNotNull(this._environment, this.errorMessage, Constants.ENVIRONMENT_ERROR_MESSAGE);
 
         Utility.assertNotNull(this._token, this.errorMessage, Constants.TOKEN_ERROR_MESSAGE);
 
-        Utility.assertNotNull(this._store, this.errorMessage, Constants.STORE_ERROR_MESSAGE);
-
-        Utility.assertNotNull(this._sdkConfig, this.errorMessage, Constants.SDK_CONFIG_ERROR_MESSAGE);
-
-        Utility.assertNotNull(this._resourcePath, this.errorMessage, Constants.RESOURCE_PATH_ERROR_MESSAGE);
-
-        if (this._logger == null) {
-            this._logger = loggerFile.Logger.getInstance(loggerFile.Levels.INFO, path.join(__dirname, "..", Constants.LOGFILE_NAME));
+        if(this._store == null) {
+            this._store = new FileStore(path.join(__dirname, "../../../../", Constants.TOKEN_FILE));
         }
 
+        if(this._sdkConfig == null) {
+            this._sdkConfig = new SDKConfigBuilder().build();
+        }
+
+        if(this._resourcePath == null) {
+            this._resourcePath = path.join(__dirname, "../../../../", '');
+        }
+
+        if (this._logger == null) {
+            this._logger = new LogBuilder().level(Levels.INFO).filePath(path.join(__dirname, "../../../../", Constants.LOG_FILE_NAME)).build();
+        }
+        
         Initializer.initialize(this._user, this._environment, this._token, this._store, this._sdkConfig, this._resourcePath, this._logger, this._requestProxy);
     }
 
@@ -87,6 +103,16 @@ class InitializeBuilder {
     }
 
     logger(logger) {
+        if (logger != null && !(logger instanceof Logger)) {
+            let error = {};
+
+            error[Constants.ERROR_HASH_FIELD] = Constants.LOGGER;
+
+            error[Constants.ERROR_HASH_EXPECTED_TYPE] = Logger.name;
+
+            throw new SDKException(Constants.INITIALIZATION_ERROR, Constants.INITIALIZATION_EXCEPTION, error);
+        }
+
         this._logger = logger;
 
         return this;
@@ -111,9 +137,7 @@ class InitializeBuilder {
     }
 
     SDKConfig(sdkConfig) {
-        Utility.assertNotNull(sdkConfig, this.errorMessage, Constants.SDK_CONFIG_ERROR_MESSAGE);
-
-        if (!(sdkConfig instanceof SDKConfig)) {
+        if (sdkConfig != null && !(sdkConfig instanceof SDKConfig)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.SDK_CONFIG;
@@ -129,17 +153,23 @@ class InitializeBuilder {
     }
 
     requestProxy(requestProxy) {
+        if (requestProxy != null && !(requestProxy instanceof RequestProxy)) {
+            let error = {};
+
+            error[Constants.ERROR_HASH_FIELD] = Constants.REQUEST_PROXY;
+
+            error[Constants.ERROR_HASH_EXPECTED_TYPE] = RequestProxy.name;
+
+            throw new SDKException(Constants.INITIALIZATION_ERROR, Constants.INITIALIZATION_EXCEPTION, error);
+        }
+
         this._requestProxy = requestProxy;
 
         return this;
     }
 
     resourcePath(resourcePath) {
-        if (resourcePath == null || resourcePath.length <= 0) {
-            throw new SDKException(this.errorMessage, Constants.RESOURCE_PATH_ERROR_MESSAGE);
-        }
-
-        if (!fs.statSync(resourcePath).isDirectory()) {
+        if (resourcePath != null && !fs.statSync(resourcePath).isDirectory()) {
             throw new SDKException(this.errorMessage, Constants.RESOURCE_PATH_INVALID_ERROR_MESSAGE);
         }
 
@@ -149,7 +179,7 @@ class InitializeBuilder {
     }
 
     user(user) {
-        Utility.assertNotNull(user, this.errorMessage, Constants.USERSIGNATURE_ERROR_MESSAGE);
+        Utility.assertNotNull(user, this.errorMessage, Constants.USER_SIGNATURE_ERROR_MESSAGE);
 
         if (!(user instanceof UserSignature)) {
             let error = {};
@@ -167,9 +197,7 @@ class InitializeBuilder {
     }
 
     store(store) {
-        Utility.assertNotNull(store, this.errorMessage, Constants.STORE_ERROR_MESSAGE);
-
-        if (!(store instanceof TokenStore)) {
+       if (store != null && !(store instanceof TokenStore)) {
             let error = {};
 
             error[Constants.ERROR_HASH_FIELD] = Constants.STORE;

@@ -7,6 +7,7 @@ class CustomView{
 	name;
 	systemName;
 	displayValue;
+	createdTime;
 	accessType;
 	category;
 	sortBy;
@@ -107,6 +108,28 @@ class CustomView{
 		}
 		this.displayValue = displayValue;
 		this.keyModified.set("display_value", 1);
+
+	}
+
+	/**
+	 * The method to get the createdTime
+	 * @returns {Date} An instance of Date
+	 */
+	getCreatedTime()	{
+		return this.createdTime;
+
+	}
+
+	/**
+	 * The method to set the value to createdTime
+	 * @param {Date} createdTime An instance of Date
+	 */
+	setCreatedTime(createdTime)	{
+		if((createdTime != null) && (!(createdTime instanceof Date)))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: createdTime EXPECTED TYPE: Date", null, null);
+		}
+		this.createdTime = createdTime;
+		this.keyModified.set("created_time", 1);
 
 	}
 

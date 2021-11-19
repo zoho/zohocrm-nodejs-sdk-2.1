@@ -1,7 +1,7 @@
 /**
  * This class verifies and sets token to APIHTTPConnector instance.
  */
-class Token {
+ class Token {
 
     /**
      * This method is to set authentication token to APIHTTPConnector instance.

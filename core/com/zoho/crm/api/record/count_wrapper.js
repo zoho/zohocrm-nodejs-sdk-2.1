@@ -7,7 +7,7 @@ class CountWrapper{
 	keyModified = new Map();
 	/**
 	 * The method to get the count
-	 * @returns {String} A String representing the count
+	 * @returns {BigInt} A BigInt representing the count
 	 */
 	getCount()	{
 		return this.count;
@@ -16,11 +16,11 @@ class CountWrapper{
 
 	/**
 	 * The method to set the value to count
-	 * @param {String} count A String representing the count
+	 * @param {BigInt} count A BigInt representing the count
 	 */
 	setCount(count)	{
-		if((count != null) && (!(Object.prototype.toString.call(count) == "[object String]")))	{
-			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: count EXPECTED TYPE: String", null, null);
+		if((count != null) && (!(Object.prototype.toString.call(count) == "[object BigInt]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: count EXPECTED TYPE: BigInt", null, null);
 		}
 		this.count = count;
 		this.keyModified.set("count", 1);

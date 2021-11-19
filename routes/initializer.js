@@ -15,7 +15,6 @@ const SDKConfig = require('./sdk_config').SDKConfig;
  * The class to initialize Zoho CRM SDK.
  */
 class Initializer {
-
 	static LOCAL = new Map();
 
 	static initializer;
@@ -49,9 +48,7 @@ class Initializer {
 	 * @throws {SDKException}
 	 */
 	static async initialize(user, environment, token, store, sdkConfig, resourcePath, logger = null, proxy = null) {
-
 		try {
-
 			SDKLogger.initialize(logger);
 
 			try {
@@ -134,7 +131,6 @@ class Initializer {
 	 * @param {RequestProxy} proxy - A RequestProxy class instance containing the proxy properties.
 	 */
 	static async switchUser(user, environment, token, sdkConfig, proxy = null) {
-
 		let initializer = new Initializer();
 
 		initializer._user = user;

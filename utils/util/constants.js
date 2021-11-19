@@ -63,7 +63,7 @@ class Constants {
 
     static ZOHO_SDK = "X-ZOHO-SDK";
 
-    static SDK_VERSION = "2.0.0";
+    static SDK_VERSION = "1.0.0";
 
     static MYSQL_HOST = "localhost";
 
@@ -103,27 +103,27 @@ class Constants {
 
     static TOKEN_ERROR = "TOKEN ERROR";
 
-    static ERROR_HASH_FIELD = 'field'
+    static ERROR_HASH_FIELD = 'field';
 
-    static ERROR_HASH_EXPECTED_TYPE = 'expected_type'
+    static ERROR_HASH_EXPECTED_TYPE = 'expected_type';
 
-    static ERROR_HASH_CLASS = 'class'
+    static ERROR_HASH_CLASS = 'class';
 
-    static CONTENT_TYPE = 'content-type'
+    static CONTENT_TYPE = 'content-type';
 
-    static INSTANCE_NUMBER = 'instance-number'
+    static INSTANCE_NUMBER = 'instance-number';
 
-    static ERROR_HASH_MEMBER = 'member'
+    static ERROR_HASH_MEMBER = 'member';
 
-    static NAME = 'name'
+    static NAME = 'name';
 
-    static DATA_TYPE_ERROR = "DATA TYPE ERROR"
+    static DATA_TYPE_ERROR = "DATA TYPE ERROR";
 
-    static VALUES = 'values'
+    static VALUES = 'values';
 
-    static ACCEPTED_VALUES = 'accepted-values'
+    static ACCEPTED_VALUES = 'accepted-values';
 
-    static ACCEPTED_TYPE = 'accepted-type'
+    static ACCEPTED_TYPE = 'accepted-type';
 
     static GIVEN_TYPE = "given-type";
 
@@ -131,101 +131,101 @@ class Constants {
 
     static GIVEN_VALUE = "given-value";
 
-    static UNACCEPTED_VALUES_ERROR = 'UNACCEPTED VALUES ERROR'
+    static UNACCEPTED_VALUES_ERROR = 'UNACCEPTED VALUES ERROR';
 
-    static MIN_LENGTH = "min-length"
+    static MIN_LENGTH = "min-length";
 
-    static MAX_LENGTH = "max-length"
+    static MAX_LENGTH = "max-length";
 
-    static ERROR_HASH_MAXIMUM_LENGTH = "maximum-length"
+    static ERROR_HASH_MAXIMUM_LENGTH = "maximum-length";
 
-    static MAXIMUM_LENGTH_ERROR = "MAXIMUM LENGTH ERROR"
+    static MAXIMUM_LENGTH_ERROR = "MAXIMUM LENGTH ERROR";
 
-    static ERROR_HASH_MINIMUM_LENGTH = "minimum-length"
+    static ERROR_HASH_MINIMUM_LENGTH = "minimum-length";
 
-    static MINIMUM_LENGTH_ERROR = "MINIMUM LENGTH ERROR"
+    static MINIMUM_LENGTH_ERROR = "MINIMUM LENGTH ERROR";
 
-    static REGEX = "regex"
+    static REGEX = "regex";
 
-    static REGEX_MISMATCH_ERROR = "REGEX MISMATCH ERROR"
+    static REGEX_MISMATCH_ERROR = "REGEX MISMATCH ERROR";
 
-    static UNIQUE = "unique"
+    static UNIQUE = "unique";
 
-    static UNIQUE_KEY_ERROR = "UNIQUE KEY ERROR"
+    static UNIQUE_KEY_ERROR = "UNIQUE KEY ERROR";
 
-    static FIRST_INDEX = "first-index"
+    static FIRST_INDEX = "first-index";
 
-    static NEXT_INDEX = "next-index"
+    static NEXT_INDEX = "next-index";
 
-    static LONG_NAMESPACE = 'Long'
+    static LONG_NAMESPACE = 'Long';
 
-    static BOOLEAN_NAMESPACE = 'Boolean'
+    static BOOLEAN_NAMESPACE = 'Boolean';
 
-    static INTEGER_NAMESPACE = 'Integer'
+    static INTEGER_NAMESPACE = 'Integer';
 
-    static STRING_NAMESPACE = 'String'
+    static STRING_NAMESPACE = 'String';
 
-    static DOUBLE_NAMESPACE = 'Double'
+    static DOUBLE_NAMESPACE = 'Double';
 
-    static DATETIME_NAMESPACE = 'DateTime'
+    static DATETIME_NAMESPACE = 'DateTime';
 
-    static DATE_NAMESPACE = 'Date'
+    static DATE_NAMESPACE = 'Date';
 
-    static FLOAT_NAMESPACE = 'Float'
+    static FLOAT_NAMESPACE = 'Float';
 
-    static OBJECT_NAMESPACE = 'Object'
+    static OBJECT_NAMESPACE = 'Object';
 
-    static DOUBLE_COLON = '::'
+    static DOUBLE_COLON = '::';
 
-    static DOT = '.'
+    static DOT = '.';
 
-    static UNDERSCORE = "_"
+    static UNDERSCORE = "_";
 
-    static STREAM_WRAPPER_CLASS_PATH = "utils/util/stream_wrapper"
+    static STREAM_WRAPPER_CLASS_PATH = "utils/util/stream_wrapper";
 
-    static FILE_NAMESPACE = "utils/util/stream_wrapper"
+    static FILE_NAMESPACE = "utils/util/stream_wrapper";
 
     static CONTENT_DISPOSITION = "content-disposition";
 
-    static PACKAGE_PREFIX = 'com.zoho.crm.api.'
+    static PACKAGE_PREFIX = 'com.zoho.crm.api.';
 
-    static INTERFACE = "interface"
+    static INTERFACE = "interface";
 
-    static CLASSES = "classes"
+    static CLASSES = "classes";
 
-    static CLASS_KEY = "class"
+    static CLASS_KEY = "class";
 
-    static READ_ONLY = "read-only"
+    static READ_ONLY = "read-only";
 
-    static IS_KEY_MODIFIED = 'is_key_modified'
+    static IS_KEY_MODIFIED = 'is_key_modified';
 
     static SET_KEY_MODIFIED = "set_key_modified";
 
     static REQUIRED = "required";
 
-    static REQUIRED_IN_UPDATE = "required_in_update";
+    static REQUIRED_IN_UPDATE = "required-in-update";
 
-    static MANDATORY_VALUE_ERROR = "MANDATORY VALUE ERROR"
+    static MANDATORY_VALUE_ERROR = "MANDATORY VALUE ERROR";
 
-    static MANDATORY_VALUE_NULL_ERROR = "MANDATORY VALUE NULL ERROR"
+    static MANDATORY_VALUE_NULL_ERROR = "MANDATORY VALUE NULL ERROR";
 
     static MANDATORY_KEY_ERROR = "Value missing or null for mandatory key(s) :";
 
-    static MANDATORY_KEY_NULL_ERROR = "Null Value for mandatory key : "
+    static MANDATORY_KEY_NULL_ERROR = "Null Value for mandatory key : ";
 
-    static LIST_NAMESPACE = "list"
+    static LIST_NAMESPACE = "list";
 
-    static MAP_NAMESPACE = "map"
+    static MAP_NAMESPACE = "map";
 
-    static HASH_MAP_NAMESPACE = "HashMap"
+    static HASH_MAP_NAMESPACE = "HashMap";
 
-    static STRUCTURE_NAME = "structure_name"
+    static STRUCTURE_NAME = "structure_name";
 
-    static KEYS = "keys"
+    static KEYS = "keys";
 
-    static KEY_VALUES = "key_values"
+    static KEY_VALUES = "key_values";
 
-    static INITIALIZATION_ERROR = 'INITIALIZATION ERROR'
+    static INITIALIZATION_ERROR = 'INITIALIZATION ERROR';
 
     static INITIALIZATION_EXCEPTION = "Exception in initialization : ";
 
@@ -233,31 +233,33 @@ class Constants {
 
     static EMAIL = "email";
 
-    static USER_ERROR = "USER ERROR"
+    static USER_ERROR = "USER ERROR";
 
-    static CLIENT_ID_FIELD = "clientID"
+    static CLIENT_ID_FIELD = "clientID";
 
-    static CLIENT_SECRET_FIELD = "clientSecret"
+    static CLIENT_SECRET_FIELD = "clientSecret";
 
-    static REDIRECT_URL_FIELD = "redirectURL"
+    static REDIRECT_URL_FIELD = "redirectURL";
 
-    static TYPE = "type"
+    static TYPE = "type";
 
-    static TYPE_ERROR = "TYPE ERROR"
+    static TYPE_ERROR = "TYPE ERROR";
 
-    static HEADER_PARAM_VALIDATION_ERROR = "Exception in header or param validation"
+    static HEADER_PARAM_VALIDATION_ERROR = "Exception in header or param validation";
 
-    static TOKEN = "token"
+    static TOKEN = "token";
 
-    static EXPECTED_TOKEN_TYPES = "REFRESH, GRANT"
+    static EXPECTED_TOKEN_TYPES = "REFRESH, GRANT";
 
-    static INVALID_CLIENT_ERROR = "INVALID CLIENT ERROR"
+    static INVALID_CLIENT_ERROR = "INVALID CLIENT ERROR";
 
-    static ERROR_KEY = "error"
+    static ERROR_KEY = "error";
 
     static GET_TOKEN_ERROR = "Exception in getting access token";
 
-    static LOGFILE_NAME = "sdk_logs.log"
+    static LOG_FILE_NAME = "sdk_logs.log";
+
+    static TOKEN_FILE = "sdk_tokens.txt"
 
     static JSON_DETAILS_FILE_PATH = "json_details.json";
 
@@ -267,7 +269,7 @@ class Constants {
 
     static USER = "user";
 
-    static ENVIRONMENT = "environment"
+    static ENVIRONMENT = "environment";
 
     static STORE = "store";
 
@@ -277,9 +279,9 @@ class Constants {
 
     static INDEX = "index";
 
-    static CONTENT_TYPE = 'Content-Type'
+    static CONTENT_TYPE = 'Content-Type';
 
-    static APPLICATION_JSON_CONTENT_TYPE = 'application/json'
+    static APPLICATION_JSON_CONTENT_TYPE = 'application/json';
 
     static EXCEPTION_IS_KEY_MODIFIED = "Exception in calling isKeyModified";
 
@@ -301,7 +303,7 @@ class Constants {
 
     static RECORD_NAMESPACE = 'core/com/zoho/crm/api/record/record';
 
-    static ATTACHMENTS_NAMESPACE = 'core/com/zoho/crm/api/attachment/attachment';
+    static ATTACHMENTS_NAMESPACE = 'core/com/zoho/crm/api/attachments/attachment';
 
     static FIELD_FILE_NAMESPACE = 'core/com/zoho/crm/api/record/file_details';
 
@@ -309,7 +311,7 @@ class Constants {
 
     static INVENTORY_LINE_ITEMS = 'core/com/zoho/crm/api/record/inventory_line_items';
 
-    static PRICINGDETAILS = 'core/com/zoho/crm/api/record/pricing_details';
+    static PRICING_DETAILS = 'core/com/zoho/crm/api/record/pricing_details';
 
     static COMMENT_NAMESPACE = 'core/com/zoho/crm/api/record/comment';
 
@@ -355,7 +357,7 @@ class Constants {
 
     static PRODUCT_DETAILS = "Product_Details";
 
-    static PRICING_DETAILS = "Pricing_Details";
+    static PRICING_DETAILS_API_NAME = "Pricing_Details";
 
     static PARTICIPANT_API_NAME = "Participants";
 
@@ -495,7 +497,7 @@ class Constants {
 
     static REFRESH_ALL_MODULE_FIELDS_ERROR = "Exception in refreshing fields of all modules : ";
 
-    static SKIP_MANDATORY = "skip_mandatory";
+    static SKIP_MANDATORY = "skip-mandatory";
 
     static PRIMARY_KEY_ERROR = "Value missing or null for required key(s) : ";
 
@@ -573,7 +575,7 @@ class Constants {
 
     static IS_GENERATE_REQUEST_BODY = ["PATCH", "POST", "PUT"];
 
-    static USERSIGNATURE_ERROR_MESSAGE = "UserSignature MUST NOT be null.";
+    static USER_SIGNATURE_ERROR_MESSAGE = "UserSignature MUST NOT be null.";
 
     static ENVIRONMENT_ERROR_MESSAGE = "Environment MUST NOT be null.";
 
@@ -667,6 +669,20 @@ class Constants {
     static DISCOUNT = "Discount";
 
     static LINETAX = "core/com/zoho/crm/api/record/line_tax";
+
+    static NODEJS = "nodejs_";
+
+    static LOGGER = "logger";
+
+    static REQUEST_PROXY = "request_proxy";
+
+    static COUNT = "count";
+
+    static SKIP_MODULES = ["deals"];
+
+    static OWNER_LOOKUP = "ownerlookup";
+
+    static NUMBER_TYPE = "[object Number]";
 }
 
 module.exports = {

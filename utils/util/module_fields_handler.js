@@ -18,7 +18,7 @@ class ModuleFieldsHandler {
     static async getDirectory() {
         let initializer = await Initializer.getInitializer();
 
-        return path.join(initializer.resourcePath, Constants.FIELD_DETAILS_DIRECTORY);
+        return path.join(initializer.getResourcePath(), Constants.FIELD_DETAILS_DIRECTORY);
     }
 
     /**
@@ -72,7 +72,7 @@ class ModuleFieldsHandler {
         try {
             let initializer = await Initializer.getInitializer();
 
-            let recordFieldDetailsPath = path.join(initializer.resourcePath, Constants.FIELD_DETAILS_DIRECTORY, await new Converter().getEncodedFileName());
+            let recordFieldDetailsPath = path.join(initializer.getResourcePath(), Constants.FIELD_DETAILS_DIRECTORY, await new Converter().getEncodedFileName());
 
             if (fs.existsSync(recordFieldDetailsPath)) {
                 let recordFieldDetailsJson = await Initializer.getJSON(recordFieldDetailsPath);
@@ -99,7 +99,7 @@ class ModuleFieldsHandler {
         try {
             await this.deleteFields(module);
 
-            await Utility.getFields(module);
+            await Utility.getFieldsInfo(module);
 
         } catch (error) {
             if (!(error instanceof SDKException)) {

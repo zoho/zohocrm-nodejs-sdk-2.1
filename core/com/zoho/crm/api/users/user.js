@@ -890,6 +890,27 @@ class User extends Record{
 
 	}
 
+	/**
+	 * The method to get the category
+	 * @returns {String} A String representing the category
+	 */
+	getCategory()	{
+		return this.getKeyValue("category");
+
+	}
+
+	/**
+	 * The method to set the value to category
+	 * @param {String} category A String representing the category
+	 */
+	setCategory(category)	{
+		if((category != null) && (!(Object.prototype.toString.call(category) == "[object String]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: category EXPECTED TYPE: String", null, null);
+		}
+		this.addKeyValue("category", category);
+
+	}
+
 }
 module.exports = {
 	MasterModel : User,

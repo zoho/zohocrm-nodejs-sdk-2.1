@@ -18,7 +18,7 @@ class FormDataConverter extends Converter {
     async appendToRequest(requestBase, requestObject) {
         var formDataRequestBody = new formData();
 
-        await this.addFileBody(requestBase.requestBody, formDataRequestBody);
+        await this.addFileBody(requestBase.getRequestBody(), formDataRequestBody);
 
         return formDataRequestBody;
     }

@@ -19,7 +19,7 @@ class JSONConverter extends Converter {
 	}
 
 	async appendToRequest(requestBase, requestObject) {
-		return JSON.stringify(requestBase.requestBody) || null;
+		return JSON.stringify(requestBase.getRequestBody()) || null;
 	}
 
 	async formRequest(requestInstance, pack, instanceNumber, memberDetail) {
@@ -61,14 +61,6 @@ class JSONConverter extends Converter {
 	}
 
 	async isNotRecordRequest(requestInstance, classDetail, instanceNumber, classMemberDetail) {
-		var requestJSON = {};
-
-		var requiredKeys = new Map();
-
-		var primaryKeys = new Map();
-
-		var requiredInUpdateKeys = new Map();
-
 		var lookUp = false;
 
 		var skipMandatory = false;
@@ -82,6 +74,14 @@ class JSONConverter extends Converter {
 
 			classMemberName = this.buildName(classMemberDetail[Constants.NAME]);
 		}
+
+		var requestJSON = {};
+
+		var primaryKeys = new Map();
+
+		var requiredKeys = new Map();
+
+		var requiredInUpdateKeys = new Map();
 
 		for (let memberName in classDetail) {
 			var modification = null;
@@ -238,25 +238,25 @@ class JSONConverter extends Converter {
 		return true;
 	}
 
-	async isRecordRequest(recordInstance, classDetail, instanceNumber, classMemberDetail) {
-		var requestJSON = {};
-
-		var moduleDetail = {};
-
+	async isRecordRequest(recordInstance, classDetail, instanceNumber, memberDetail) {
 		var lookUp = false;
 
 		var skipMandatory = false;
 
 		var classMemberName = null;
 
-		if (classMemberDetail != null) {
+		if (memberDetail != null) {
 
-			lookUp = (classMemberDetail.hasOwnProperty(Constants.LOOKUP) ? classMemberDetail[Constants.LOOKUP] : false);
+			lookUp = (memberDetail.hasOwnProperty(Constants.LOOKUP) ? memberDetail[Constants.LOOKUP] : false);
 
-			skipMandatory = (classMemberDetail.hasOwnProperty(Constants.SKIP_MANDATORY) ? classMemberDetail[Constants.SKIP_MANDATORY] : false);
+			skipMandatory = (memberDetail.hasOwnProperty(Constants.SKIP_MANDATORY) ? memberDetail[Constants.SKIP_MANDATORY] : false);
 
-			classMemberName = this.buildName(classMemberDetail[Constants.NAME]);
+			classMemberName = this.buildName(memberDetail[Constants.NAME]);
 		}
+
+		var requestJSON = {};
+
+		var moduleDetail = {};
 
 		var moduleAPIName = this.commonAPIHandler.getModuleAPIName();
 
@@ -325,7 +325,6 @@ class JSONConverter extends Converter {
 			}
 		}
 
-
 		for (let keyName of Array.from(keyModified.keys())) {
 
 			if (keyModified.get(keyName) != 1) {
@@ -364,7 +363,7 @@ class JSONConverter extends Converter {
 					continue;
 				}
 
-				if (await this.valueChecker(recordInstance.constructor.name, keyName, keyDetail, keyValue, uniqueValues, instanceNumber)) {
+				if (await this.valueChecker(recordInstance.constructor.name, memberName, keyDetail, keyValue, uniqueValues, instanceNumber)) {
 					jsonValue = await this.setData(keyDetail, keyValue);
 				}
 			}
@@ -420,7 +419,7 @@ class JSONConverter extends Converter {
 				}
 			}
 			else {
-				if (memberDetail.hasOwnProperty(Constants.KEYS)) {
+				if (memberDetail !== null && memberDetail.hasOwnProperty(Constants.KEYS)) {
 					var keysDetail = memberDetail[Constants.KEYS];
 
 					for (let keyIndex = 0; keyIndex < keysDetail.length; keyIndex++) {
@@ -459,7 +458,7 @@ class JSONConverter extends Converter {
 
 				if (pack == Constants.CHOICE_NAMESPACE) {
 					for (let request of requestObjects) {
-						jsonArray.push(request.value);
+						jsonArray.push(request.getValue());
 					}
 				}
 				else if (memberDetail.hasOwnProperty(Constants.MODULE) && memberDetail[Constants.MODULE] != null) {
@@ -558,7 +557,6 @@ class JSONConverter extends Converter {
 	}
 
 	async isRecordResponse(responseJson, classDetail, pack) {
-
 		let className = require("../../" + pack).MasterModel;
 
 		let recordInstance = new className();
@@ -757,14 +755,14 @@ class JSONConverter extends Converter {
 		}
 	}
 
-	findMatch(classes, responseJson) {
+	async findMatch(classes, responseJson) {
 		let pack = "";
 
 		let ratio = 0;
 
 		for (let className of classes) {
 
-			var matchRatio = this.findRatio(className, responseJson);
+			var matchRatio = await this.findRatio(className, responseJson);
 
 			if (matchRatio == 1.0) {
 
@@ -813,6 +811,9 @@ class JSONConverter extends Converter {
 					}
 
 					if (Constants.TYPE_VS_DATATYPE.has(memberDetail[Constants.TYPE].toLowerCase()) && Constants.TYPE_VS_DATATYPE.get(memberDetail[Constants.TYPE].toLowerCase()) == type) {
+						matches++;
+					}
+					else if (keyName.toLowerCase() == Constants.COUNT && memberDetail[Constants.TYPE].toLowerCase() == Constants.LONG_NAMESPACE.toLowerCase() && type == Constants.NUMBER_TYPE) {
 						matches++;
 					}
 					else if (memberDetail[Constants.TYPE] == Constants.CHOICE_NAMESPACE) {

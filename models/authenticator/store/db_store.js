@@ -9,7 +9,6 @@ const OAuthBuilder = require("../oauth_builder").OAuthBuilder;
  * This class stores the user token details to the MySQL DataBase.
  */
 class DBStore extends TokenStore {
-
     userName;
 
     portNumber;
@@ -47,15 +46,15 @@ class DBStore extends TokenStore {
         this.portNumber = portNumber;
     }
 
-    getToken(user, token) {
+    async getToken(user, token) {
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             if (token instanceof OAuthToken) {
 
                 var oauthToken = token;
 
-                var sql = this.constructDBQuery(user.getEmail(), oauthToken, false);
+                var sql = await this.constructDBQuery(user.getEmail(), oauthToken, false);
 
                 return new Promise(function (resolve, reject) {
                     connection.connect(function (err) {
@@ -65,7 +64,7 @@ class DBStore extends TokenStore {
                             if (err) {
                                 connection.end();
 
-                                throw new Error(err);
+                                throw err;
                             }
 
                             connection.end();
@@ -73,13 +72,21 @@ class DBStore extends TokenStore {
                             if (result.length != 0) {
                                 oauthToken.setId(result[0].id);
 
-                                oauthToken.setAccessToken(result[0].access_token);
+                                oauthToken.setUserMail(result[0].user_mail);
 
-                                oauthToken.setExpiresIn(result[0].expiry_time);
+                                oauthToken.setClientId(result[0].client_id);
+
+                                oauthToken.setClientSecret(result[0].client_secret);
 
                                 oauthToken.setRefreshToken(result[0].refresh_token);
 
-                                oauthToken.setUserMail(result[0].user_mail);
+                                oauthToken.setAccessToken(result[0].access_token);
+
+                                oauthToken.setGrantToken(result[0].grant_token);
+
+                                oauthToken.setExpiresIn(result[0].expiry_time);
+                                
+                                oauthToken.setRedirectURL(result[0].redirect_url);
 
                                 resolve(oauthToken);
                             }
@@ -89,15 +96,14 @@ class DBStore extends TokenStore {
                     });
                 })
             }
-
         } catch (error) {
             throw new SDKException(Constants.TOKEN_STORE, Constants.GET_TOKEN_DB_ERROR, null, error);
         }
     };
 
-    saveToken(user, token) {
+    async saveToken(user, token) {
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             var dbStoreInstance = this;
 
@@ -114,14 +120,14 @@ class DBStore extends TokenStore {
                     dbStoreInstance.deleteToken(token).then(function () {
                         connection.connect(function (err) {
                             if (err) {
-                                throw new Error(err);
+                                throw err;
                             }
 
                             connection.query(sqlQuery, [values], function (err, result) {
                                 if (err) {
                                     connection.end();
 
-                                    throw new Error(err);
+                                    throw err;
                                 }
 
                                 connection.end();
@@ -138,13 +144,12 @@ class DBStore extends TokenStore {
         }
     }
 
-    deleteToken(token) {
+    async deleteToken(token) {
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             if (token instanceof OAuthToken) {
-
-                var sqlQuery = this.constructDBQuery(token.getUserMail(), token, true);
+                var sqlQuery = await this.constructDBQuery(token.getUserMail(), token, true);
 
                 return new Promise(function (resolve, reject) {
                     connection.connect(function (err) {
@@ -152,7 +157,7 @@ class DBStore extends TokenStore {
 
                         connection.query(sqlQuery, function (err, result) {
                             if (err) {
-                                throw new Error(err);
+                                throw err;
                             }
 
                             connection.end();
@@ -168,11 +173,11 @@ class DBStore extends TokenStore {
         }
     };
 
-    getTokens() {
+    async getTokens() {
         var tokens = [];
 
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             var sqlQuery = "select * from " + this.tableName + ";";
 
@@ -184,7 +189,7 @@ class DBStore extends TokenStore {
                         if (err) {
                             connection.end();
 
-                            throw new Error(err);
+                            throw err;
                         }
 
                         connection.end();
@@ -222,13 +227,12 @@ class DBStore extends TokenStore {
 
         } catch (error) {
             throw new SDKException(Constants.TOKEN_STORE, Constants.GET_TOKENS_DB_ERROR, null, error);
-
         }
     }
 
-    deleteTokens() {
+    async deleteTokens() {
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             var sqlQuery = "delete from " + this.tableName + ";";
 
@@ -238,7 +242,7 @@ class DBStore extends TokenStore {
 
                     connection.query(sqlQuery, function (err, result) {
                         if (err) {
-                            throw new Error(err);
+                            throw err;
                         }
 
                         connection.end();
@@ -278,15 +282,15 @@ class DBStore extends TokenStore {
             user: this.userName,
             password: this.password,
             database: this.databaseName,
-            port: this.portNumber
+            port: Number(this.portNumber)
         });
 
         return connection;
     }
 
-    getTokenById(id, token) {
+    async getTokenById(id, token) {
         try {
-            var connection = this.getConnection();
+            var connection = await this.getConnection();
 
             if (token instanceof OAuthToken) {
 
@@ -300,13 +304,13 @@ class DBStore extends TokenStore {
                             if (err) {
                                 connection.end();
 
-                                throw new Error(err);
+                                throw err;
                             }
 
                             connection.end();
 
                             if (result.length != 0) {
-                                let grantToken = (result[0].grant_token != null && result[0].grant_token !== Constants.NULL_VALUE && strlen(result[0].grant_token) > 0) ? result[0].grant_token : null;
+                                let grantToken = (result[0].grant_token != null && result[0].grant_token !== Constants.NULL_VALUE && result[0].grant_token.length > 0) ? result[0].grant_token : null;
 
                                 token.setClientId(result[0].client_id);
 
@@ -317,7 +321,7 @@ class DBStore extends TokenStore {
                                 token.setId(result[0].id);
 
                                 if (grantToken != null) {
-                                    oauthToken.setGrantToken(grantToken);
+                                    token.setGrantToken(grantToken);
                                 }
 
                                 token.setUserMail(result[0].user_mail);
