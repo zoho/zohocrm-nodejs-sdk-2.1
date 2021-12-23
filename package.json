@@ -15,7 +15,7 @@
     "API"
   ],
   "author": "Zoho CRM API Team (support@zohocrm.com)",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "form-data": "^3.0.0",
     "got": "^11.2.0",
