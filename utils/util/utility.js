@@ -171,7 +171,7 @@ class Utility {
 
                 await Utility.fillDataType();
 
-                this.apiSupportedModule = Object.keys(this.apiSupportedModule).length > 0 > 0 ? this.apiSupportedModule : await Utility.getModules(null);
+                this.apiSupportedModule = Object.keys(this.apiSupportedModule).length > 0 ? this.apiSupportedModule : await Utility.getModules(null);
 
                 let recordFieldDetailsJson = fs.existsSync(recordFieldDetailsPath) ? Initializer.getJSON(recordFieldDetailsPath) : {};
 
@@ -311,7 +311,11 @@ class Utility {
 
         for (let keyName of Object.keys(fieldsJSON)) {
             if (fieldsJSON[keyName].hasOwnProperty(Constants.SUBFORM) && fieldsJSON[keyName][Constants.SUBFORM] == true && recordFieldDetailsJson.hasOwnProperty((fieldsJSON[keyName][Constants.MODULE]).toLowerCase())) {
-                subformModules.push(fieldsJSON[keyName][Constants.MODULE]);
+                let subformModuleName = fieldsJSON[keyName][Constants.MODULE];
+                
+                if(!subformModules.includes(subformModuleName)) {
+                    subformModules.push(subformModuleName);
+                }
             }
         }
 
@@ -398,7 +402,7 @@ class Utility {
 
                     commonAPIHandler.setModuleAPIName(relatedListObject[Constants.MODULE]);
 
-                    await Utility.getFields(relatedListObject[Constants.MODULE], commonAPIHandler);
+                    await Utility.getFieldsInfo(relatedListObject[Constants.MODULE], commonAPIHandler);
                 }
 
                 return true;

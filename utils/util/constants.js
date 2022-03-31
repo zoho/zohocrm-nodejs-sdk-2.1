@@ -63,7 +63,7 @@ class Constants {
 
     static ZOHO_SDK = "X-ZOHO-SDK";
 
-    static SDK_VERSION = "1.0.0";
+    static SDK_VERSION = "1.1.0";
 
     static MYSQL_HOST = "localhost";
 

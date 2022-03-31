@@ -337,6 +337,7 @@ class CommonAPIHandler {
 			case "image/jpeg":
 			case "image/gif":
 			case "image/tiff":
+			case "image/tif":
 			case "image/svg+xml":
 			case "image/bmp":
 			case "image/webp":
