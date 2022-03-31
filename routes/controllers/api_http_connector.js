@@ -9,7 +9,6 @@ const Initializer = require("../initializer").Initializer;
  * This module is to make HTTP connections, trigger the requests and receive the response
  */
 class APIHTTPConnector {
-
 	url;
 
 	requestMethod;

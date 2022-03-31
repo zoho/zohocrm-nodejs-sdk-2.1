@@ -5,6 +5,7 @@ class BodyWrapper{
 
 	data;
 	trigger;
+	process;
 	duplicateCheckFields;
 	wfTrigger;
 	larId;
@@ -50,6 +51,28 @@ class BodyWrapper{
 		}
 		this.trigger = trigger;
 		this.keyModified.set("trigger", 1);
+
+	}
+
+	/**
+	 * The method to get the process
+	 * @returns {Array} An Array representing the process
+	 */
+	getProcess()	{
+		return this.process;
+
+	}
+
+	/**
+	 * The method to set the value to process
+	 * @param {Array} process An Array representing the process
+	 */
+	setProcess(process)	{
+		if((process != null) && (!(Object.prototype.toString.call(process) == "[object Array]")))	{
+			throw new SDKException(Constants.DATA_TYPE_ERROR, "KEY: process EXPECTED TYPE: Array", null, null);
+		}
+		this.process = process;
+		this.keyModified.set("process", 1);
 
 	}
 

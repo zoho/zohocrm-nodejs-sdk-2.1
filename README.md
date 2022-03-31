@@ -78,7 +78,7 @@ You can include the SDK to your project using:
     ```sh
     npm install @zohocrm/nodejs-sdk-2.1
     ```
-- The NodeJS SDK will be installed and a package named **@zohocrm/nodejs-sdk** will be created in the local machine.
+- The NodeJS SDK will be installed and a package named **@zohocrm/nodejs-sdk-2.1** will be created in the local machine.
 
 - Another method to install the SDK
     - Add dependencies to the package.json of the node server with the latest version (recommended)
@@ -244,7 +244,7 @@ class CustomStore extends TokenStore{
     /**
      *
      * @param {UserSignature} user A UserSignature class instance.
-     * @param {Token} token A Token (@zohocrm/nodejs-sdk/models/authenticator/oauth_token) class instance.
+     * @param {Token} token A Token (@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_token) class instance.
      * @returns A Token class instance representing the user token details.
      * @throws {SDKException} if any error occurs.
      */
@@ -256,7 +256,7 @@ class CustomStore extends TokenStore{
     /**
      *
      * @param {UserSignature} user A UserSignature class instance.
-     * @param {Token} token A Token (@zohocrm/nodejs-sdk/models/authenticator/oauth_token) class instance.
+     * @param {Token} token A Token (@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_token) class instance.
      * @throws {SDKException} if any error occurs.
      */
     saveToken(user, token) {
@@ -265,7 +265,7 @@ class CustomStore extends TokenStore{
 
     /**
      *
-     * @param {Token} token A Token (@zohocrm/nodejs-sdk/models/authenticator/oauth_token) class instance.
+     * @param {Token} token A Token (@zohocrm/nodejs-sdk-2.1/models/authenticator/oauth_token) class instance.
      * @throws {SDKException} if any error occurs.
      */
     deleteToken(token) {
