@@ -1,12 +1,16 @@
 {
   "name": "@zohocrm/nodejs-sdk-2.1",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Node JS SDK for Zoho CRM",
-  "main": "routes/initializer",
+  "main": "lib/index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/zoho/zohocrm-nodejs-sdk-2.1"
   },
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "Node",
     "Zoho",
